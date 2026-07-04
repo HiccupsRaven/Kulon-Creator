@@ -1,0 +1,32 @@
+{
+  "name": "kulon-creator",
+  "version": "1.0.0-wip.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node .",
+    "dev": "npx --node-options=\"--import tsx\" app.ts",
+    "format": "prettier --write .",
+    "check": "prettier --check .",
+    "type-check": "tsc -p . --pretty --noEmit",
+    "lint": "eslint --ext ts --ext js",
+    "up:patch": "npm --no-git-tag-version version patch",
+    "up:minor": "npm --no-git-tag-version version minor",
+    "up:major": "npm --no-git-tag-version version major",
+    "prepatch": "npm --no-git-tag-version version prepatch && npm --no-git-tag-version version prerelease --preid wip",
+    "preminor": "npm --no-git-tag-version version preminor && npm --no-git-tag-version version prerelease --preid wip",
+    "premajor": "npm --no-git-tag-version version premajor && npm --no-git-tag-version version prerelease --preid wip",
+    "prerelease": "npm --no-git-tag-version version prerelease"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HiccupsRaven/Kulon-Creator.git"
+  },
+  "keywords": [],
+  "author": "Devanka761 <contact@devanka.id> (https://devanka.id/)",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/HiccupsRaven/Kulon-Creator/issues"
+  },
+  "homepage": "https://github.com/HiccupsRaven/Kulon-Creator#readme"
+}
