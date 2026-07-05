@@ -5,3 +5,5 @@ ex
 dist
 MyProjects
 .vscode/settings.json
+public/*.html
+public/fuhhh

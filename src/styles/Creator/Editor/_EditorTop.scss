@@ -1,0 +1,109 @@
+@use "../../variables" as v;
+
+.Editor .EditorTop {
+  background-color: v.$pm2;
+  flex-shrink: 0;
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: v.$mediumPadding;
+  .left {
+    flex-grow: 1;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    gap: v.$mediumPadding;
+    padding: v.$mediumPadding;
+    overflow: hidden;
+    p {
+      color: v.$pm1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+  .right {
+    height: 100%;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: v.$mediumPadding;
+    .right-tile {
+      display: flex;
+      justify-content: start;
+      align-items: center;
+      gap: 0;
+      .btn {
+        &.btn-tile {
+          position: relative;
+          padding: 1px 6px;
+          border-radius: 4px;
+          &.active {
+            background-color: v.$pm1;
+            color: v.$px1;
+          }
+        }
+        &.btn-tile-help {
+          position: relative;
+          margin: 0 v.$smallPadding;
+        }
+        &.btn-tile,
+        &.btn-tile-help {
+          .help {
+            display: none;
+            position: absolute;
+            width: fit-content;
+            white-space: nowrap;
+            top: 26px;
+            right: 0;
+            padding: 2px 6px;
+            background-color: v.$pm1;
+            color: v.$px1;
+            border-radius: 4px;
+            .help-info {
+              display: inline-block;
+              width: 12px;
+              height: 12px;
+              border: 1px solid v.$px1;
+              &.red {
+                background-color: v.$cred;
+              }
+              &.blue {
+                background-color: v.$blurple;
+              }
+              &.green {
+                background-color: v.$cgreen;
+              }
+              &.black {
+                background-color: v.$px1;
+              }
+              &.white {
+                background-color: v.$white;
+              }
+            }
+          }
+          &:hover {
+            .help {
+              display: block;
+            }
+          }
+        }
+      }
+    }
+    .right-close {
+      height: 100%;
+      .btn-close {
+        padding: calc(v.$mediumPadding * 1.4);
+        height: 100%;
+        background-color: v.$cred;
+        color: v.$white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
+}

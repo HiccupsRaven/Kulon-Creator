@@ -1,0 +1,98 @@
+import chat from "../manager/Chat"
+import { Person } from "./Person"
+import { playRandomFootstep } from "../manager/randomPlays"
+import { IGameObjectPerson, MapWalls } from "../types/MapsTypes"
+import { Game } from "./Game"
+import { IKeyHold } from "./InputHandler"
+
+export class Player extends Person {
+  footstep: "a" | "b"
+  isPlayer: boolean = true
+
+  constructor(config: IGameObjectPerson, footstep: "a" | "b") {
+    super(config, footstep)
+    this.footstep = footstep
+  }
+
+  update(deltaTime: number, keys: IKeyHold, walls: MapWalls, game: Game): void {
+    if (game.isCutscenePlaying) {
+      this.updateBehavior(deltaTime, game)
+      this.animate(deltaTime, game)
+      return
+    }
+
+    const handlePlayerMovement = () => {
+      const oldX = this.x
+      const oldY = this.y
+
+      if (chat.formOpened || this.isAttacking) {
+        this.isColliding(this.x, this.y, walls, game.map.gameObjects, game)
+        this.isMoving = this.x !== oldX || this.y !== oldY
+        return
+      }
+      let moveX = 0
+      let moveY = 0
+      if (keys["w"]) {
+        moveY = -1
+        this.direction = "up"
+      } else if (keys["s"]) {
+        moveY = 1
+        this.direction = "down"
+      }
+      if (keys["a"]) {
+        moveX = -1
+        this.direction = "left"
+      } else if (keys["d"]) {
+        moveX = 1
+        this.direction = "right"
+      }
+
+      if (moveX === 0 && moveY === 0) {
+        this.isColliding(this.x, this.y, walls, game.map.gameObjects, game)
+        this.isMoving = this.x !== oldX || this.y !== oldY
+        return
+      }
+
+      const length = Math.sqrt(moveX * moveX + moveY * moveY)
+      if (length > 1) {
+        moveX /= length
+        moveY /= length
+      }
+
+      const desiredNextX = this.x + moveX * this.speed * deltaTime
+      const desiredNextY = this.y + moveY * this.speed * deltaTime
+
+      if (!this.isColliding(desiredNextX, this.y, walls, game.map.gameObjects, game)) {
+        this.x = desiredNextX
+      }
+      if (!this.isColliding(this.x, desiredNextY, walls, game.map.gameObjects, game)) {
+        this.y = desiredNextY
+      }
+
+      this.isMoving = this.x !== oldX || this.y !== oldY
+    }
+
+    if (this.movingProgressRemaining > 0 || this.behaviorLoop.length > 0) {
+      this.updateBehavior(deltaTime, game)
+    } else {
+      handlePlayerMovement()
+    }
+
+    this.animate(deltaTime, game)
+
+    const now = Date.now()
+
+    if (this.isMoving !== game.wasMoving || (this.isMoving && now - game.lastMoveTime > 100)) {
+      game.wasMoving = this.isMoving
+      game.lastMoveTime = now
+    }
+  }
+  audioFootSteps(): void {
+    playRandomFootstep(this.footstep, true)
+  }
+
+  onEnemyCollision(_enemy: Person): void {
+    // sabar dulu ges, cape.
+    // fiturnya lagi dipikirin
+  }
+}

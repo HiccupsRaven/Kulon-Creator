@@ -1,0 +1,28 @@
+[
+  {
+    "id": "null",
+    "name": {
+      "id": "Pilih item untuk dibaca",
+      "en": "Choose item to read"
+    },
+    "desc": {
+      "id": "Deskripsi item akan ditampilkan di sini",
+      "en": "Item description will be displayed here"
+    },
+    "src": "null",
+    "group": "0"
+  },{
+    "id": "J00006",
+    "name": {
+      "id": "Catatan #69",
+      "en": "Note #69"
+    },
+    "desc": {
+      "id": "Ada hal penting yang perlu diketahui?",
+      "en": "Is there something important I missed?"
+    },
+    "run": "readnote",
+    "src": "paper",
+    "group": "0"
+  }
+]
