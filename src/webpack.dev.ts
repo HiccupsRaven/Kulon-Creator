@@ -3,7 +3,8 @@ import { Configuration } from "webpack"
 import HtmlWebpackPlugin from "html-webpack-plugin"
 import MiniCssExtractPlugin from "mini-css-extract-plugin"
 import { CleanWebpackPlugin } from "clean-webpack-plugin"
-import publiEntries from "./public.entries"
+import publicEntries from "./public.entries"
+import monacoEntries from "./monaco.entries"
 
 interface IAppConfigEntries {
   title: string
@@ -14,7 +15,7 @@ interface IAppConfigEntries {
 
 type IPlugins = (CleanWebpackPlugin | MiniCssExtractPlugin | HtmlWebpackPlugin)[]
 
-const entryGroup: IAppConfigEntries[] = Object.keys(publiEntries).map((key) => ({
+const entryGroup: IAppConfigEntries[] = Object.keys(publicEntries).map((key) => ({
   title: key,
   filename: `${key}.html`,
   template: `${key}.html`,
@@ -43,12 +44,13 @@ Object.values(entryGroup).forEach((entryInfo, _entryName) => {
   )
 })
 
-const entry = { ...publiEntries }
+const entry = { ...publicEntries, ...monacoEntries }
 
 const config: Configuration = {
   mode: "development",
   entry,
   output: {
+    globalObject: "self",
     path: path.resolve(__dirname, "../public/fuhhh"),
     filename: "[name].js",
     iife: false,
@@ -61,14 +63,7 @@ const config: Configuration = {
   module: {
     rules: [
       {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: {
-          loader: "babel-loader"
-        }
-      },
-      {
-        test: /\.ts$/,
+        test: /\.ts?$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
@@ -80,6 +75,14 @@ const config: Configuration = {
       {
         test: /\.s[ac]ss$/i,
         use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"]
+      },
+      {
+        test: /\.css$/i,
+        use: [MiniCssExtractPlugin.loader, "css-loader"]
+      },
+      {
+        test: /\.(ttf|woff|woff2|eot)$/i,
+        type: "asset/resource"
       }
     ]
   },
