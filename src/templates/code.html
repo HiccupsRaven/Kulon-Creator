@@ -29,6 +29,91 @@
     <title>Kulon UGC Creator</title>
   </head>
   <body>
-    <div class="app" id="editor-monaco-container"></div>
+    <div class="app">
+      <div class="kulon-code-top">
+        <div class="kulon-code-top-left">
+          <img src="/images/logo.svg" alt="Devanka 761 Logo" title="Devanka HiccupsRaven Logo" width="20" />
+          <p>Kulon Custom Game Code</p>
+        </div>
+        <div class="kulon-code-top-mid">{PROJECT_NAME}</div>
+        <div class="kulon-code-top-right">
+          <div class="btn btn-close"><i class="fa-solid fa-xmark"></i></div>
+        </div>
+      </div>
+
+      <div class="kulon-code-mid">
+        <div class="kulon-code-mid-left">
+          <div class="kulon-code-tabs">
+            <div class="btn kulon-code-tab active unsaved">
+              <div class="file"><i class="fa-brands fa-typescript fa-fw"></i> CustomScript.ts</div>
+              <div class="status"><i class="fa-solid fa-floppy-disk fa-fw"></i></div>
+            </div>
+            <div class="btn kulon-code-tab unsaved">
+              <div class="file"><i class="fa-brands fa-sass fa-fw"></i> CustomStyle.scss</div>
+              <div class="status"><i class="fa-solid fa-floppy-disk fa-fw"></i></div>
+            </div>
+          </div>
+          <div class="kulon-code-editor">
+            <div class="code-editor" id="code-editor"></div>
+          </div>
+        </div>
+        <div class="kulon-code-mid-right">
+          <div class="lang-mode script-lang">
+            <div class="tx">Script Language:</div>
+            <div class="inp">
+              <div class="radio">
+                <label for="script-lang-typescript">
+                  <input type="radio" name="script-lang" id="script-lang-typescript" value="typescript" />
+                  <span><i class="fa-brands fa-typescript fa-fw"></i> TypeScript</span>
+                </label>
+              </div>
+              <div class="radio">
+                <label for="script-lang-javascript">
+                  <input type="radio" name="script-lang" id="script-lang-javascript" value="javascript" />
+                  <span><i class="fa-brands fa-js fa-fw"></i> JavaScript</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="lang-mode style-lang">
+            <div class="tx">Style Language:</div>
+            <div class="inp">
+              <div class="radio">
+                <label for="style-lang-scss">
+                  <input type="radio" name="style-lang" id="style-lang-scss" value="scss" />
+                  <span><i class="fa-brands fa-sass fa-fw"></i> SCSS</span>
+                </label>
+              </div>
+              <div class="radio">
+                <label for="style-lang-less">
+                  <input type="radio" name="style-lang" id="style-lang-less" value="less" />
+                  <span><i class="fa-brands fa-less fa-fw"></i> Less</span>
+                </label>
+              </div>
+              <div class="radio">
+                <label for="style-lang-css">
+                  <input type="radio" name="style-lang" id="style-lang-css" value="css" />
+                  <span><i class="fa-brands fa-css3 fa-fw"></i> CSS</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="kulon-code-bottom">
+        <div class="kulon-code-bottom-left">
+          <div class="code-pos">Ln 10, Col 40 (20 selected)</div>
+          <div class="code-lang"><i class="fa-light fa-brackets-curly fa-fw"></i> TypeScript</div>
+        </div>
+        <div class="kulon-code-bottom-right">
+          <div class="btn code-compile">
+            <div class="code-text"><i class="fa-solid fa-check"></i></div>
+            <div class="code-text">Compile:</div>
+            <div class="code-file">CustomGame.ts</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

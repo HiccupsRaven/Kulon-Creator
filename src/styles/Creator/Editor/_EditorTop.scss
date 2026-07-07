@@ -98,11 +98,13 @@
       .btn-close {
         padding: calc(v.$mediumPadding * 1.4);
         height: 100%;
-        background-color: v.$cred;
         color: v.$white;
         display: flex;
         justify-content: center;
         align-items: center;
+        &:hover {
+          background-color: v.$sred;
+        }
       }
     }
   }

@@ -1,6 +1,6 @@
-@use "./main";
-
-.app {
-  width: 100%;
-  height: 100%;
-}
+@use "./other/animations";
+@use "./lib/modal";
+@use "./Code/CodeBase";
+@use "./Code/CodeTop";
+@use "./Code/CodeMiddle";
+@use "./Code/CodeBottom";
