@@ -24,7 +24,7 @@ self.MonacoEnvironment = {
 monaco.editor.defineTheme("Palenight", palenightTheme as monaco.editor.IStandaloneThemeData)
 
 monaco.editor.create(document.getElementById("code-editor")!, {
-  value: ["function x() {", '\tconsole.log("Hello world!");', "}"].join("\n"),
+  value: `export class EditorTop {\n\tlocked: boolean = false\n\tprivate el!: HTMLDivElement\n\teditor: Editor\n\n\tconstructor(s: EditorTopConfig) {\n\t\tthis.editor = s.editor\n\t}\n}\n\nfunction x(n: number): boolean {\n\tconsole.log("Hello world!");\n\treturn true;\n}`,
   language: "typescript",
   fontFamily: `"JetBrains Mono", "MonoLisa", monospace, monospace`,
   fontSize: 16,
@@ -35,5 +35,7 @@ monaco.editor.create(document.getElementById("code-editor")!, {
   cursorStyle: "block",
   minimap: { enabled: false },
   bracketPairColorization: { enabled: true },
-  wordWrap: "on"
+  wordWrap: "on",
+  renderWhitespace: "trailing",
+  tabSize: 2
 })
