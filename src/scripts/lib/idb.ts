@@ -1,9 +1,10 @@
 import { IAsset, IAssets } from "../types/LibTypes"
 import { UGCData, UGCMeta, UGCRef } from "../Creator/types/CreatorTypes"
 import { FileDataType, IFileRep, IFileRes, IReplaceFile, ISendFile } from "../types/IndexedDbTypes"
-import { astPath, sysPath } from "./dbVar"
+import { astPath, modsPath, sysPath } from "./dbVar"
 import { genStringId, rStr, sanitizeName } from "../Creator/lib/gen"
 import { vfs } from "./VirtualFileSystem"
+import { UGMRef, UGMTree } from "../Code/types/CodeTypes"
 
 export class Virtualdb {
   data: UGCData = {}
@@ -61,35 +62,6 @@ export class Virtualdb {
     this.data[ugcParsed.meta.id] = ugcParsed
 
     return ugcParsed
-  }
-  async load(): Promise<void> {
-    if (this.isLoaded) return
-
-    this.isLoaded = true
-
-    const projectIds = await vfs.getAllProjectIds()
-
-    for (const projectId of projectIds) {
-      const ref: Partial<UGCRef> = {}
-
-      const metaFile = await vfs.readFile(projectId, sysPath, "meta.json")
-      const assetsFile = await vfs.readFile(projectId, sysPath, "assets.json")
-      const startendFile = await vfs.readFile(projectId, sysPath, "startend.json")
-      const mapsFile = await vfs.readFile(projectId, sysPath, "maps.json")
-      const itemsFile = await vfs.readFile(projectId, sysPath, "items.json")
-      const settingsFile = await vfs.readFile(projectId, sysPath, "settings.json")
-
-      ref.meta = metaFile
-      ref.assets = assetsFile || []
-      ref.startend = startendFile || {}
-      ref.maps = mapsFile || {}
-      ref.items = itemsFile || []
-      ref.settings = settingsFile
-
-      const ugcParsed = ref as UGCRef
-
-      this.data[ugcParsed.meta.id] = ugcParsed
-    }
   }
   async getProject(projectId: string): Promise<UGCRef | null> {
     const ref: Partial<UGCRef> = {}
@@ -202,6 +174,65 @@ export class Virtualdb {
     this.save(projectId, "meta")
 
     return
+  }
+  async load(): Promise<void> {
+    if (this.isLoaded) return
+
+    this.isLoaded = true
+
+    const projectIds = await vfs.getAllProjectIds()
+
+    for (const projectId of projectIds) {
+      const ref: Partial<UGCRef> = {}
+
+      const metaFile = await vfs.readFile(projectId, sysPath, "meta.json")
+      const assetsFile = await vfs.readFile(projectId, sysPath, "assets.json")
+      const startendFile = await vfs.readFile(projectId, sysPath, "startend.json")
+      const mapsFile = await vfs.readFile(projectId, sysPath, "maps.json")
+      const itemsFile = await vfs.readFile(projectId, sysPath, "items.json")
+      const settingsFile = await vfs.readFile(projectId, sysPath, "settings.json")
+
+      ref.meta = metaFile
+      ref.assets = assetsFile || []
+      ref.startend = startendFile || {}
+      ref.maps = mapsFile || {}
+      ref.items = itemsFile || []
+      ref.settings = settingsFile
+
+      const ugcParsed = ref as UGCRef
+
+      this.data[ugcParsed.meta.id] = ugcParsed
+    }
+  }
+  async getModsTree(): Promise<UGMTree[]> {
+    const modsTree: UGMTree[] = []
+
+    const projectIds = await vfs.getAllProjectIds()
+
+    for (const projectId of projectIds) {
+      const modTree: Partial<UGMTree> = {}
+
+      const metaFile = await vfs.readFile(projectId, sysPath, "meta.json")
+      const settingsFile = await vfs.readFile(projectId, sysPath, "settings.json")
+      const modlangFile = await vfs.readFile(projectId, modsPath, "modlang.json")
+
+      modTree.id = projectId
+      modTree.project = settingsFile.project
+      modTree.created = metaFile.created
+      modTree.modified = metaFile.modified
+      if (modlangFile) modTree.modLanguage = modlangFile
+
+      modsTree.push(modTree as UGMTree)
+    }
+
+    return modsTree
+  }
+
+  async getModValues(projectId: string): Promise<UGMRef> {
+    const scriptFile = await vfs.readFile(projectId, modsPath, "Script")
+    const styleFile = await vfs.readFile(projectId, modsPath, "Style")
+
+    return { script: scriptFile, style: styleFile }
   }
 }
 
