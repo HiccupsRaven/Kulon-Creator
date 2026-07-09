@@ -1,6 +1,6 @@
 import { futor, kel } from "../../lib/kel"
 import { db } from "../data/db"
-import { addExternalLib, initEditor } from "../data/editorWork"
+import { addExternalLib, createFileModel, initEditor } from "../data/editorWork"
 import { EditorMiddle } from "../EditorMiddle"
 
 interface ITextEditorConfig {
@@ -37,7 +37,10 @@ export class TextEditor {
   }
 
   private createEditor(): void {
-    initEditor(this.codeEditor, db.modLanguage.script, db.script)
+    createFileModel("CustomScript", db.modLanguage.script, db.script)
+    createFileModel("CustomStyle", db.modLanguage.style, db.style)
+
+    initEditor(this.codeEditor)
   }
 
   get html(): HTMLDivElement {

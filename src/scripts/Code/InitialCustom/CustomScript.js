@@ -1,4 +1,4 @@
-"use strict"
+/*IMPORTSTYLE*/
 
 export class CustomGame {
   constructor(config) {

@@ -23,6 +23,10 @@ export function setInitDB(ugm: UGMTree, modValues: UGMRef): void {
   db.modified = Number(ugm.modified)
   db.project = ugm.project.toString()
   db.modLanguage = toObject(ugm.modLanguage)
-  db.script = modValues.script?.toString() || ""
-  db.style = modValues.style?.toString() || ""
+
+  const script = modValues.script?.toString() || ""
+  const style = modValues.style?.toString() || ""
+
+  db.script = script
+  db.style = style
 }

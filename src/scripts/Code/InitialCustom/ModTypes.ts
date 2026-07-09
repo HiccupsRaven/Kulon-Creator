@@ -1,41 +1,37 @@
-declare module "*.scss"
-declare module "*.less"
-declare module "*.css"
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-declare type IAny = any
+export type IAny = any
 
-declare interface IKulonLocale {
+export interface IKulonLocale {
   id: string
   en: string
 }
 
-declare type KulonAnyMessageType = string | boolean | number | null
+export type KulonAnyMessageType = string | boolean | number | null
 
-declare type KulonAnyMessage = Record<string, KulonAnyMessageType>
+export type KulonAnyMessage = Record<string, KulonAnyMessageType>
 
-declare type KulonDirectionType = "up" | "down" | "left" | "right"
+export type KulonDirectionType = "up" | "down" | "left" | "right"
 
-declare interface IKulonWalk {
+export interface IKulonWalk {
   who?: string
   direction?: KulonDirectionType
 }
 
-declare interface IKulonChoiceOption {
+export interface IKulonChoiceOption {
   text: IKulonLocale
   pass?: boolean
 }
 
-declare interface IKulonPos {
+export interface IKulonPos {
   x: number
   u: number
 }
 
-declare type KulonGameObjectType = "Person" | "Interactable" | "Teleporter" | "Player" | "Prop"
+export type KulonGameObjectType = "Person" | "Interactable" | "Teleporter" | "Player" | "Prop"
 
-declare type KulonGameObjectSrc = string[] | string
+export type KulonGameObjectSrc = string[] | string
 
-declare interface IKulonObjectEvent {
+export interface IKulonObjectEvent {
   n?: string
   type: string
   who?: string
@@ -70,24 +66,24 @@ declare interface IKulonObjectEvent {
   winners?: string[]
 }
 
-declare interface IKulonObjectTalk {
+export interface IKulonObjectTalk {
   required?: string[]
   events: IKulonObjectEvent[]
 }
 
-declare interface IKulonTeleporeterFromPosition {
+export interface IKulonTeleporeterFromPosition {
   x: number
   y: number
   direction?: KulonDirectionType
 }
-declare interface IKulonGameObjectTeleporterType {
+export interface IKulonGameObjectTeleporterType {
   up?: IKulonTeleporeterFromPosition
   down?: IKulonTeleporeterFromPosition
   left?: IKulonTeleporeterFromPosition
   right?: IKulonTeleporeterFromPosition
 }
 
-declare interface IKulonGameObjectData {
+export interface IKulonGameObjectData {
   name?: string
   id?: string
   finished?: IKulonObjectEvent[]
@@ -111,14 +107,14 @@ declare interface IKulonGameObjectData {
   following?: boolean
 }
 
-declare interface KulonGame {
+export interface KulonGame {
   readonly isPaused: boolean
   readonly isCutscenePlaying: boolean
 
   addGameObject(gameObject: IKulonGameObjectData): void
 }
 
-declare interface IKulonSkin {
+export interface IKulonSkin {
   Bodies: string
   Eyes: string
   Outfits: string
@@ -129,7 +125,7 @@ declare interface IKulonSkin {
   Hats: string
 }
 
-declare interface IKulonUser {
+export interface IKulonUser {
   id: string
   username: string
   joined: number
@@ -138,7 +134,7 @@ declare interface IKulonUser {
   access: number[]
 }
 
-declare interface KulonCharacterAPI {
+export interface KulonCharacterAPI {
   readonly user: IKulonUser
 
   readonly id: string
@@ -166,32 +162,32 @@ declare interface KulonCharacterAPI {
   send(message: { [key: string]: string | boolean | number | null }): void
 }
 
-declare interface IKulonPlayersMatchMaking {
+export interface IKulonPlayersMatchMaking {
   id: string
   ts: number
   ready: boolean
   done: boolean
 }
 
-declare interface KulonJobFlag {
+export interface KulonJobFlag {
   val(): string | boolean | undefined
   set(): void
   delete(): void
 }
 
-declare type IKulonJobStates = {
+export type IKulonJobStates = {
   [key: string]: boolean | string
 }
 
-declare interface IKulonJobItem {
+export interface IKulonJobItem {
   id: string
   amount: number
   itemId?: string
 }
 
-declare type KulonJobBag = Record<string, IKulonJobItem>
+export type KulonJobBag = Record<string, IKulonJobItem>
 
-declare interface KulonJob {
+export interface KulonJob {
   get host(): string | undefined
 
   get id(): string | undefined
@@ -217,7 +213,7 @@ declare interface KulonJob {
   getItem(item: string): IKulonJobItem | undefined
 }
 
-declare interface KulonPeers {
+export interface KulonPeers {
   size(): number
 
   getAll(): Map<string, KulonCharacterAPI>
@@ -233,18 +229,18 @@ declare interface KulonPeers {
   send(type: string, message: KulonAnyMessage): void
 }
 
-declare interface KulonSocket {
+export interface KulonSocket {
   send(type: string, message: KulonAnyMessage): void
 }
 
-declare interface IKulonModConfig {
+export interface IKulonModConfig {
   peers: KulonPeers
   socket: KulonSocket
   job: KulonJob
   me: string
 }
 
-declare interface KulonMod {
+export interface KulonMod {
   readonly id: string
   config?: IKulonModConfig
   addClaim?(state: string, status: boolean | string): void
