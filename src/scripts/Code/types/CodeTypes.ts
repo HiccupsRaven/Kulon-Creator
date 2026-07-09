@@ -1,6 +1,6 @@
 export type ModScriptLanguage = "typescript" | "javascript"
 export type ModStyleLanguage = "scss" | "less" | "css"
-export type ModLanguage = ModScriptLanguage | ModStyleLanguage
+export type ModLanguage = ModScriptLanguage | ModStyleLanguage | "json"
 
 export interface IModLanguage {
   script: ModScriptLanguage
@@ -18,4 +18,8 @@ export interface UGMTree {
 export interface UGMRef {
   script?: string
   style?: string
+}
+
+export interface UGMRefExtended extends UGMRef {
+  assets?: string
 }

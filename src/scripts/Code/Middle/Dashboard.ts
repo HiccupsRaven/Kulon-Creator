@@ -2,26 +2,13 @@ import { idb } from "../../lib/idb"
 import { futor, kel } from "../../lib/kel"
 import sdate from "../../lib/sdate"
 import { setInitDB } from "../data/db"
+import { scriptIcons, styleIcons } from "../data/EditorModel"
 import { EditorMiddle } from "../EditorMiddle"
-import { ModScriptLanguage, ModStyleLanguage, UGMRef, UGMTree } from "../types/CodeTypes"
+import { UGMRefExtended, UGMTree } from "../types/CodeTypes"
 import { GenerateModValues } from "./GenerateModValues"
 
 interface IDashboardConfig {
   middle: EditorMiddle
-}
-
-type ScriptIcon = Record<ModScriptLanguage, string>
-type StyleIcon = Record<ModStyleLanguage, string>
-
-const scriptIcons: ScriptIcon = {
-  typescript: "typescript",
-  javascript: "js"
-}
-
-const styleIcons: StyleIcon = {
-  scss: "scss",
-  less: "less",
-  css: "css3"
 }
 
 function initialCard(text: string): HTMLDivElement {
@@ -126,20 +113,20 @@ export class Dashboard {
     if (this.middle.editor.locked) return
     this.middle.lock()
 
-    const modValues: UGMRef = await idb.getModValues(ugm.id)
+    const modValues: UGMRefExtended = await idb.getModValues(ugm.id)
 
     if (ugm.modLanguage && modValues.script && modValues.style) {
       return this.goToTextEditor(ugm, modValues)
     }
 
     const genModValues = new GenerateModValues()
-    genModValues.onDone((modLang, modValues) => {
-      this.goToTextEditor({ ...ugm, modLanguage: modLang }, modValues)
+    genModValues.onDone((modLang, newModVal) => {
+      this.goToTextEditor({ ...ugm, modLanguage: modLang }, { ...modValues, ...newModVal })
     })
     genModValues.init()
   }
 
-  private async goToTextEditor(ugm: UGMTree, modValues: UGMRef): Promise<void> {
+  private async goToTextEditor(ugm: UGMTree, modValues: UGMRefExtended): Promise<void> {
     setInitDB(ugm, modValues)
 
     this.middle.editor.top.setProjectName(ugm.id, ugm.project)

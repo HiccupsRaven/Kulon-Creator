@@ -4,7 +4,7 @@ import { FileDataType, IFileRep, IFileRes, IReplaceFile, ISendFile } from "../ty
 import { astPath, modsPath, sysPath } from "./dbVar"
 import { genStringId, rStr, sanitizeName } from "../Creator/lib/gen"
 import { vfs } from "./VirtualFileSystem"
-import { UGMRef, UGMTree } from "../Code/types/CodeTypes"
+import { UGMRefExtended, UGMTree } from "../Code/types/CodeTypes"
 
 export class Virtualdb {
   data: UGCData = {}
@@ -228,11 +228,12 @@ export class Virtualdb {
     return modsTree
   }
 
-  async getModValues(projectId: string): Promise<UGMRef> {
+  async getModValues(projectId: string): Promise<UGMRefExtended> {
     const scriptFile = await vfs.readFile(projectId, modsPath, "Script")
     const styleFile = await vfs.readFile(projectId, modsPath, "Style")
+    const assetsFile = await vfs.readFile(projectId, sysPath, "assets.json")
 
-    return { script: scriptFile, style: styleFile }
+    return { script: scriptFile, style: styleFile, assets: assetsFile }
   }
 }
 

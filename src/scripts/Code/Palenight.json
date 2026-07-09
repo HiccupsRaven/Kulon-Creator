@@ -114,8 +114,12 @@
       "foreground": "#008080"
     },
     {
+      "token": "number.scss",
+      "foreground": "#b5cea8"
+    },
+    {
       "token": "number.hex",
-      "foreground": "#008080"
+      "foreground": "#F78C6C"
     },
     {
       "token": "regexp",
@@ -151,7 +155,7 @@
     },
     {
       "token": "meta.scss",
-      "foreground": "#FF5874"
+      "foreground": "#9684ec"
     },
     {
       "token": "metatag",
@@ -175,27 +179,31 @@
     },
     {
       "token": "string.key.json",
-      "foreground": "#A31515"
+      "foreground": "#C3E88D"
     },
     {
       "token": "string.value.json",
-      "foreground": "#0451A5"
+      "foreground": "#80CBC4"
+    },
+    {
+      "token": "number.json",
+      "foreground": "#F78C6C"
     },
     {
       "token": "attribute.name",
-      "foreground": "#FF0000"
+      "foreground": "#80CBC4"
     },
     {
       "token": "attribute.value",
-      "foreground": "#0451A5"
+      "foreground": "#9684ec"
     },
     {
       "token": "attribute.value.number",
-      "foreground": "#008080"
+      "foreground": "#F78C6C"
     },
     {
       "token": "attribute.value.unit",
-      "foreground": "#008080"
+      "foreground": "#FFCB6B"
     },
     {
       "token": "attribute.value.html",
@@ -219,7 +227,7 @@
     },
     {
       "token": "keyword.json",
-      "foreground": "#0451A5"
+      "foreground": "#9684ec"
     },
     {
       "token": "keyword.flow",
@@ -227,7 +235,7 @@
     },
     {
       "token": "keyword.flow.scss",
-      "foreground": "#0000FF"
+      "foreground": "#9684ec"
     },
     {
       "token": "operator.scss",
@@ -247,11 +255,11 @@
     },
     {
       "token": "attribute.value.number.css",
-      "foreground": "#B5CEA8"
+      "foreground": "#F78C6C"
     },
     {
       "token": "attribute.value.unit.css",
-      "foreground": "#B5CEA8"
+      "foreground": "#FFCB6B"
     },
     {
       "token": "attribute.value.hex.css",
@@ -280,7 +288,7 @@
     },
     {
       "token": "variable",
-      "foreground": "#008080"
+      "foreground": "#9684ec"
     },
     {
       "token": "keyword",

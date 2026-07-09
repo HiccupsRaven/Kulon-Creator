@@ -1,10 +1,11 @@
 import { toObject } from "../../Creator/lib/gen"
-import { IModLanguage, UGMRef, UGMTree } from "../types/CodeTypes"
+import { IModLanguage, UGMRefExtended, UGMTree } from "../types/CodeTypes"
 
-interface ILocalDB extends UGMTree, UGMRef {
+interface ILocalDB extends UGMTree, UGMRefExtended {
   modLanguage: IModLanguage
   script: string
   style: string
+  assets: string
 }
 
 export const db: ILocalDB = {
@@ -14,10 +15,11 @@ export const db: ILocalDB = {
   modLanguage: { script: "typescript", style: "scss" },
   project: "unamed",
   script: "",
-  style: ""
+  style: "",
+  assets: ""
 }
 
-export function setInitDB(ugm: UGMTree, modValues: UGMRef): void {
+export function setInitDB(ugm: UGMTree, modValues: UGMRefExtended): void {
   db.id = ugm.id.toString()
   db.created = Number(ugm.created)
   db.modified = Number(ugm.modified)
@@ -26,7 +28,9 @@ export function setInitDB(ugm: UGMTree, modValues: UGMRef): void {
 
   const script = modValues.script?.toString() || ""
   const style = modValues.style?.toString() || ""
+  const assets = modValues.assets
 
   db.script = script
   db.style = style
+  db.assets = JSON.stringify(assets ?? [], null, 2)
 }

@@ -1,6 +1,6 @@
 import { futor, kel } from "../../lib/kel"
 import { db } from "../data/db"
-import { addExternalLib, createFileModel, initEditor } from "../data/editorWork"
+import { editorModel } from "../data/EditorModel"
 import { EditorMiddle } from "../EditorMiddle"
 
 interface ITextEditorConfig {
@@ -33,14 +33,22 @@ export class TextEditor {
   }
 
   private createExternalLib(): void {
-    addExternalLib()
+    editorModel.startExternalLib()
   }
 
   private createEditor(): void {
-    createFileModel("CustomScript", db.modLanguage.script, db.script)
-    createFileModel("CustomStyle", db.modLanguage.style, db.style)
+    editorModel.createModel("CustomScript", db.modLanguage.script, db.script)
+    editorModel.createModel("CustomStyle", db.modLanguage.style, db.style)
 
-    initEditor(this.codeEditor)
+    editorModel.init(this.codeEditor)
+
+    this.middle.tabs?.activate("CustomScript")
+  }
+
+  switchEditor(modFileName: string): void {
+    if (this.middle.editor.locked) return
+
+    editorModel.switchModel(modFileName)
   }
 
   get html(): HTMLDivElement {

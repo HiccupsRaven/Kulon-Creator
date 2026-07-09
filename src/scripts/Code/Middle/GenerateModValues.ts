@@ -1,7 +1,7 @@
 import { iform } from "../../Creator/Editor/Forms/TemplateForm"
 import { eroot } from "../../lib/kel"
 import modal from "../../lib/modal"
-import { findModValues } from "../data/editorWork"
+import { editorModel } from "../data/EditorModel"
 import { IModLanguage, ModScriptLanguage, ModStyleLanguage, UGMRef } from "../types/CodeTypes"
 
 export class GenerateModValues {
@@ -135,7 +135,7 @@ export class GenerateModValues {
   }
 
   private setModValues(modLang: IModLanguage): void {
-    const modValues = findModValues(modLang)
+    const modValues = editorModel.findValues(modLang)
 
     this.destroy(modLang, modValues)
   }

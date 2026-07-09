@@ -53,7 +53,7 @@ const config: Configuration = {
     globalObject: "self",
     path: path.resolve(__dirname, "../public/fuhhh"),
     filename: "[name]-[contenthash].js",
-    iife: false,
+    iife: true,
     clean: true
   },
   plugins,
