@@ -78,8 +78,6 @@ export class Dashboard {
       </div>
     </div>
     <div class="card-tech">
-      <span><i class="fa-brands fa-typescript fa-fw"></i></span>
-      <span><i class="fa-brands fa-sass fa-fw"></i></span>
     </div>`
 
     const cardTitle = futor(".card-meta .meta-title", card)
@@ -115,7 +113,11 @@ export class Dashboard {
 
     const modValues: UGMRefExtended = await idb.getModValues(ugm.id)
 
-    if (ugm.modLanguage && modValues.script && modValues.style) {
+    const scriptExist = typeof modValues.script === "string"
+    const styleExist = typeof modValues.style === "string"
+    const langExists = typeof ugm.modLanguage !== "undefined"
+
+    if (langExists && scriptExist && styleExist) {
       return this.goToTextEditor(ugm, modValues)
     }
 

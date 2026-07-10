@@ -53,11 +53,19 @@ export class TextEditor {
   }
 
   switchFileLang(fileName: string, modLang: ModLanguage): void {
-    editorModel.switchModelLang(fileName, modLang)
+    editorModel.switchlLang(fileName, modLang)
   }
 
   resetFiles(modLang: IModLanguage, modVal: UGMRef): void {
     editorModel.reset(modLang, modVal)
+  }
+
+  saveModel(fileName: string): void {
+    editorModel.saveModel(fileName)
+  }
+
+  get isSwitchLocked(): boolean {
+    return editorModel.canSwitch
   }
 
   get html(): HTMLDivElement {

@@ -1,7 +1,7 @@
 import * as monaco from "monaco-editor"
-import palenightTheme from "../../Code/Palenight.json"
+import KulonTheme from "../../Code/KulonTheme.json"
 import initialCustom from "../InitialCustom.json"
-import { IModLanguage, ModLanguage, ModScriptLanguage, UGMRef } from "../types/CodeTypes"
+import { IModLanguage, ModLanguage, ModScriptLanguage, ModStyleLanguage, UGMRef } from "../types/CodeTypes"
 import { db } from "./db"
 import { Editor } from "../Editor"
 
@@ -23,7 +23,7 @@ self.MonacoEnvironment = {
   }
 }
 
-monaco.editor.defineTheme("Palenight", palenightTheme as monaco.editor.IStandaloneThemeData)
+monaco.editor.defineTheme("KulonTheme", KulonTheme as monaco.editor.IStandaloneThemeData)
 
 export const modLangExtensions: Record<ModLanguage, string> = {
   typescript: "ts",
@@ -38,12 +38,13 @@ type LangIcon = Record<ModLanguage, string>
 
 type ModelList = Record<string, monaco.editor.ITextModel | undefined>
 
-interface IModelState {
-  position?: monaco.IPosition
-  selection?: monaco.ISelection
-}
+type ModelStateList = Record<string, monaco.editor.ICodeEditorViewState | null>
 
-type ModelStateList = Record<string, IModelState>
+interface ISwitchLang {
+  fileName: string
+  language: ModLanguage
+  value?: string
+}
 
 export const langIcons: LangIcon = {
   typescript: "typescript",
@@ -66,10 +67,18 @@ export class EditorModel {
   protected currentFile?: string
 
   private models: ModelList = {}
-
   private modelStates: ModelStateList = {}
+  private modelSaves: Record<string, number> = {}
 
   private focusTimeOut?: ReturnType<typeof setTimeout>
+
+  private isModelWait: boolean = false
+  private queueSwitchModel: string[] = []
+  private queueModelInterval: ReturnType<typeof setInterval> | undefined
+
+  private isLangWait: boolean = false
+  private queueSwitchLang: ISwitchLang[] = []
+  private queueLangInterval: ReturnType<typeof setInterval> | undefined
 
   findValues(modLang: IModLanguage): UGMRef {
     const scriptRawVal = initialCustom[modLang.script]
@@ -95,13 +104,56 @@ export class EditorModel {
       delete this.models[modFileName]
     }
 
+    this.editor?.getModel()
+
     const fileName = `${modFileName}.${modLangExtensions[modLang]}`
 
     const fileUri = monaco.Uri.file("/" + fileName)
 
     const model = monaco.editor.createModel(modVal, modLang, fileUri)
 
+    model.onDidChangeContent((_e) => {
+      if (model.isDisposed()) return
+
+      const newVersion = model.getAlternativeVersionId()
+      const oldVersion = this.modelSaves[modFileName]
+
+      this.baseEditor?.middle.tabs?.setDirty(modFileName, oldVersion !== newVersion)
+    })
+
     this.models[modFileName] = model
+
+    this.modelSaves[modFileName] = model.getAlternativeVersionId()
+
+    this.baseEditor?.middle.tabs?.setDirty(modFileName, false)
+  }
+
+  async saveModel(fileName: string): Promise<void> {
+    if (fileName.includes("assets")) return
+
+    const model = this.models[fileName]
+    if (!model) return
+
+    const actionExists = this.editor?.getAction("editor.action.formatDocument")
+    if (actionExists) await actionExists.run()
+
+    this.modelSaves[fileName] = model.getAlternativeVersionId()
+
+    this.baseEditor?.middle.tabs?.setDirty(fileName, false)
+
+    this.setFocus()
+
+    const fileType = fileName === "CustomScript" ? "script" : "style"
+
+    db[fileType] = model.getValue()
+
+    if (fileType === "script") {
+      db.modLanguage.script = model.getLanguageId() as ModScriptLanguage
+    } else if (fileType === "style") {
+      db.modLanguage.style = model.getLanguageId() as ModStyleLanguage
+    }
+
+    this.baseEditor?.bottom.uploadSave()
   }
 
   startExternalLib(): void {
@@ -197,54 +249,27 @@ export class EditorModel {
   private saveState(): void {
     if (!this.currentFile || !this.editor) return
 
-    const lastState: IModelState = {
-      position: this.editor.getPosition() ?? undefined,
-      selection: this.editor.getSelection() ?? undefined
-    }
+    const lastState = this.editor.saveViewState()
 
     this.modelStates[this.currentFile] = lastState
   }
 
-  switchModel(fileName: string): void {
-    if (this.currentFile === fileName || !this.editor) return
+  switchModel(fileName: string, isForced?: boolean): void {
+    if ((this.currentFile === fileName && !isForced) || !this.editor) return
 
-    this.saveState()
+    this.queueSwitchModel.push(fileName)
 
-    this.currentFile = fileName
+    if (this.isModelWait) return
 
-    const model = this.models[fileName]
-
-    if (!model) return
-
-    this.editor.setModel(model)
-    this.editor.updateOptions({ readOnly: fileName === "assets" })
-
-    const lastPosition = this.modelStates[fileName]?.position
-    if (lastPosition) {
-      this.editor.setPosition(lastPosition)
-      this.editor.revealPositionInCenter(lastPosition)
-    }
-
-    const lastSelection = this.modelStates[fileName]?.selection
-    if (lastSelection) this.editor.setSelection(lastSelection)
-
-    if (this.baseEditor) this.baseEditor.bottom.updateLanguage(model.getLanguageId() as ModLanguage)
-
-    this.setFucus()
+    this._runSwitchModel()
   }
 
-  switchModelLang(fileName: string, modLang: ModLanguage): void {
-    const model = this.models[fileName]
-    if (!model) return
+  switchlLang(fileName: string, modLang: ModLanguage, modValue?: string): void {
+    this.queueSwitchLang.push({ fileName, language: modLang, value: modValue })
 
-    const modVal = model.getValue()
+    if (this.isLangWait) return
 
-    this.createModel(fileName, modLang, modVal)
-
-    if (this.currentFile && this.currentFile === fileName) {
-      this.currentFile = undefined
-      this.switchModel(fileName)
-    }
+    this._runSwitchLang()
   }
 
   private listenToCursor(): void {
@@ -279,7 +304,7 @@ export class EditorModel {
     }
   }
 
-  private setFucus(n: number = 200): void {
+  private setFocus(n: number = 200): void {
     this.clearFocus()
 
     this.focusTimeOut = setTimeout(() => {
@@ -288,20 +313,32 @@ export class EditorModel {
     }, n)
   }
 
+  private lockSwitchModel(): void {
+    this.isModelWait = true
+    setTimeout(() => (this.isModelWait = false), 300)
+  }
+
+  private lockSwitchLang(): void {
+    this.isLangWait = true
+    setTimeout(() => (this.isLangWait = false), 300)
+  }
+
+  get canSwitch(): boolean {
+    return this.isModelWait
+  }
+
   reset(modLang: IModLanguage, modVal: UGMRef): void {
     const modelScript = this.models["CustomScript"]
 
     const modelStyle = this.models["CustomStyle"]
 
-    if (modelScript) {
-      modelScript.setValue(modVal.script!)
-      this.switchModelLang("CustomScript", modLang.script)
-    }
+    if (modelScript) this.switchlLang("CustomScript", modLang.script, modVal.script)
+    if (modelStyle) this.switchlLang("CustomStyle", modLang.style, modVal.style)
 
-    if (modelStyle) {
-      modelStyle.setValue(modVal.style!)
-      this.switchModelLang("CustomStyle", modLang.style)
-    }
+    this.baseEditor?.middle.sysManager.restart()
+
+    this.baseEditor?.middle.tabs?.setDirty("CustomScript", true)
+    this.baseEditor?.middle.tabs?.setDirty("CustomStyle", true)
   }
 
   init(field: HTMLDivElement, baseEditor: Editor): void {
@@ -313,14 +350,13 @@ export class EditorModel {
       this.registerFileAutocomplete("javascript")
     }
 
-    const model = this.models["CustomScript"] ?? monaco.editor.createModel("", "typescript", monaco.Uri.file("/testFile.ts"))
-
     this.currentFile = "CustomScript"
 
     const editor = monaco.editor.create(field, {
       fontFamily: `"JetBrains Mono", "MonoLisa", monospace, monospace`,
       fontSize: 16,
-      theme: "Palenight",
+      disableMonospaceOptimizations: true,
+      theme: "KulonTheme",
       automaticLayout: true,
       lineHeight: 2,
       cursorBlinking: "expand",
@@ -329,17 +365,102 @@ export class EditorModel {
       bracketPairColorization: { enabled: true },
       wordWrap: "on",
       renderWhitespace: "trailing",
-      tabSize: 2,
-      model
+      tabSize: 2
     })
 
     this.editor = editor
 
-    this.setFucus(1000)
+    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
+      this.saveModel(this.currentFile || "undefined")
+    })
 
-    baseEditor.bottom.updateLanguage(model.getLanguageId() as ModLanguage)
+    this.setFocus(1000)
+
+    this.switchModel("CustomScript", true)
 
     this.listenToCursor()
+  }
+
+  private _renderSwitchModel(fileName: string): void {
+    if (!this.editor) return
+
+    this.queueSwitchModel.splice(0, 1)
+
+    this.lockSwitchModel()
+
+    this.saveState()
+
+    this.currentFile = fileName
+
+    this.baseEditor?.middle.tabs?.activate(fileName)
+
+    const model = this.models[fileName]
+
+    if (!model) return
+
+    this.editor.setModel(model)
+
+    this.editor.updateOptions({ readOnly: fileName === "assets" })
+
+    const viewState = this.modelStates[fileName]
+
+    if (viewState) this.editor.restoreViewState(viewState)
+
+    if (this.baseEditor) this.baseEditor.bottom.updateLanguage(model.getLanguageId() as ModLanguage)
+
+    this.setFocus()
+  }
+
+  private _runSwitchModel(): void {
+    this._renderSwitchModel(this.queueSwitchModel[0])
+
+    this.queueModelInterval = setInterval(() => {
+      if (this.isModelWait) return
+
+      const fileName = this.queueSwitchModel[0]
+
+      if (fileName) return this._renderSwitchModel(fileName)
+
+      clearInterval(this.queueModelInterval)
+      this.queueModelInterval = undefined
+    }, 100)
+  }
+
+  private _renderSwitchLang(config: ISwitchLang): void {
+    if (!this.editor) return
+
+    this.queueSwitchLang.splice(0, 1)
+
+    this.lockSwitchLang()
+
+    const model = this.models[config.fileName]
+    if (!model) return
+
+    const modVal = config.value ?? model.getValue()
+
+    this.createModel(config.fileName, config.language, modVal)
+    this.baseEditor?.middle.tabs?.changeTabLang(config.fileName, config.language)
+
+    this.baseEditor?.middle.tabs?.setDirty(config.fileName, true)
+
+    if (this.currentFile && this.currentFile === config.fileName) {
+      this.switchModel(config.fileName, true)
+    }
+  }
+
+  private _runSwitchLang(): void {
+    this._renderSwitchLang(this.queueSwitchLang[0])
+
+    this.queueLangInterval = setInterval(() => {
+      if (this.isLangWait) return
+
+      const fileConfig = this.queueSwitchLang[0]
+
+      if (fileConfig) return this._renderSwitchLang(fileConfig)
+
+      clearInterval(this.queueLangInterval)
+      this.queueLangInterval = undefined
+    }, 100)
   }
 }
 

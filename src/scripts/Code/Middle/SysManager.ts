@@ -1,5 +1,5 @@
 import { futor, kel, qutor } from "../../lib/kel"
-import { db, setEdiorDB } from "../data/db"
+import { db } from "../data/db"
 import { EditorMiddle } from "../EditorMiddle"
 import { IModLanguage, ModLanguage, ModScriptLanguage, ModStyleLanguage, UGMRef } from "../types/CodeTypes"
 import { GenerateModValues } from "./GenerateModValues"
@@ -100,7 +100,6 @@ export class SysManager {
   }
 
   private switchLanguage(tabName: string, modLang: ModLanguage): void {
-    this.middle.tabs?.changeTabLang(tabName, modLang)
     this.middle.textEditor?.switchFileLang(tabName, modLang)
   }
 
@@ -127,8 +126,6 @@ export class SysManager {
   private onFilesReset(modLang: IModLanguage, modVal: UGMRef): void {
     this.middle.lock(false)
 
-    setEdiorDB(modLang, { ...modVal, assets: db.assets })
-
     this.middle.textEditor?.resetFiles(modLang, modVal)
   }
 
@@ -141,6 +138,10 @@ export class SysManager {
     this.scriptInputListener()
     this.styleInputListener()
     this.btnResetListener()
+  }
+
+  restart(): void {
+    this.writeData()
   }
 
   init(): this {

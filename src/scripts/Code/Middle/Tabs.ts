@@ -79,15 +79,10 @@ export class Tabs {
 
   onTabSwitch(name: string): void {
     this.middle.textEditor?.switchEditor(name)
-
-    if (this.currentFile && this.currentFile === name) return
-    if (this.middle.editor.locked) return
-
-    this.activate(name)
   }
 
   onTabSave(name: string): void {
-    console.log(`Saving ${name}`)
+    this.middle.textEditor?.saveModel(name)
   }
 
   changeTabLang(tabName: string, modLang: ModLanguage): void {
@@ -99,6 +94,11 @@ export class Tabs {
       ic: `brands fa-${langIcons[modLang]}`,
       ext: modLangExtensions[modLang]
     })
+  }
+
+  setDirty(tabName: string, status: boolean = true): void {
+    const tab = this.list.find((itm) => itm.name === tabName)
+    if (tab) tab.updateStatus(status)
   }
 
   get html(): HTMLDivElement {

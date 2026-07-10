@@ -52,6 +52,7 @@ export class TabButton {
 
   private renderStatus(): void {
     this.eStatus = kel("div", "status")
+    this.eStatus.title = `Save ${this.name}.${this.ext}`
 
     this.eStatus.innerHTML = `<i class="fa-solid fa-floppy-disk"></i>`
 
@@ -84,7 +85,7 @@ export class TabButton {
 
   private onClick(): void {
     this.el.onclick = (e) => {
-      if (!this.isChanged) return this.tabs.onTabSwitch(this.name)
+      this.tabs.onTabSwitch(this.name)
 
       if (e.target instanceof Node && this.eStatus.contains(e.target) && this.isChanged) {
         this.tabs.onTabSave(this.name)

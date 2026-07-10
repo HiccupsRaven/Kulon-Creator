@@ -1,4 +1,6 @@
+import { idb } from "../lib/idb"
 import { futor, kel } from "../lib/kel"
+import { db } from "./data/db"
 import { Editor } from "./Editor"
 import { ModLanguage } from "./types/CodeTypes"
 
@@ -70,6 +72,11 @@ export class EditorBottom {
     this.eSelection.innerHTML = n > 0 ? `(${n} selected)` : ""
   }
 
+  async uploadSave(): Promise<void> {
+    const modLang = JSON.stringify(db.modLanguage || {})
+
+    await idb.saveMod(db.id, { script: db.script, style: db.style }, modLang)
+  }
   lock(status: boolean = true): void {
     this.locked = status
   }

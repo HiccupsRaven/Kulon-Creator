@@ -4,7 +4,7 @@ import { FileDataType, IFileRep, IFileRes, IReplaceFile, ISendFile } from "../ty
 import { astPath, modsPath, sysPath } from "./dbVar"
 import { genStringId, rStr, sanitizeName } from "../Creator/lib/gen"
 import { vfs } from "./VirtualFileSystem"
-import { UGMRefExtended, UGMTree } from "../Code/types/CodeTypes"
+import { UGMRef, UGMRefExtended, UGMTree } from "../Code/types/CodeTypes"
 
 export class Virtualdb {
   data: UGCData = {}
@@ -213,14 +213,20 @@ export class Virtualdb {
       const modTree: Partial<UGMTree> = {}
 
       const metaFile = await vfs.readFile(projectId, sysPath, "meta.json")
+
       const settingsFile = await vfs.readFile(projectId, sysPath, "settings.json")
+
       const modlangFile = await vfs.readFile(projectId, modsPath, "modlang.json")
 
       modTree.id = projectId
+
       modTree.project = settingsFile.project
+
       modTree.created = metaFile.created
+
       modTree.modified = metaFile.modified
-      if (modlangFile) modTree.modLanguage = modlangFile
+
+      if (modlangFile) modTree.modLanguage = JSON.parse(modlangFile || {})
 
       modsTree.push(modTree as UGMTree)
     }
@@ -240,6 +246,13 @@ export class Virtualdb {
     const assetsFile = JSON.stringify(assetsMinFile, null, 2)
 
     return { script: scriptFile, style: styleFile, assets: assetsFile }
+  }
+  async saveMod(projectId: string, ugm: UGMRef, modLang: string): Promise<void> {
+    await vfs.saveFile(projectId, modsPath, "modlang.json", "json", modLang || "")
+
+    await vfs.saveFile(projectId, modsPath, "Script", "script", ugm.script || "")
+
+    await vfs.saveFile(projectId, modsPath, "Style", "style", ugm.style || "")
   }
 }
 
