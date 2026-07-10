@@ -1,11 +1,12 @@
 import * as monaco from "monaco-editor"
 import palenightTheme from "../../Code/Palenight.json"
 import initialCustom from "../InitialCustom.json"
-import { IModLanguage, ModLanguage, ModScriptLanguage, ModStyleLanguage, UGMRef } from "../types/CodeTypes"
+import { IModLanguage, ModLanguage, ModScriptLanguage, UGMRef } from "../types/CodeTypes"
 import { db } from "./db"
+import { Editor } from "../Editor"
 
 self.MonacoEnvironment = {
-  getWorkerUrl: function (moduleId, label) {
+  getWorkerUrl: function (_moduleId, label) {
     if (label === "json") {
       return "./fuhhh/json.worker.bundle.js"
     }
@@ -33,22 +34,30 @@ export const modLangExtensions: Record<ModLanguage, string> = {
   json: "json"
 }
 
-type ScriptIcon = Record<ModScriptLanguage, string>
-type StyleIcon = Record<ModStyleLanguage, string>
+type LangIcon = Record<ModLanguage, string>
 
-export const scriptIcons: ScriptIcon = {
-  typescript: "typescript",
-  javascript: "js"
+type ModelList = Record<string, monaco.editor.ITextModel | undefined>
+
+interface IModelState {
+  position?: monaco.IPosition
+  selection?: monaco.ISelection
 }
 
-export const styleIcons: StyleIcon = {
+type ModelStateList = Record<string, IModelState>
+
+export const langIcons: LangIcon = {
+  typescript: "typescript",
+  javascript: "js",
   scss: "sass",
   less: "less",
-  css: "css3"
+  css: "css3",
+  json: "brackets-curly"
 }
 
 export class EditorModel {
   private editor?: monaco.editor.IStandaloneCodeEditor
+
+  private baseEditor?: Editor
 
   private isLibAdded: boolean = false
 
@@ -56,7 +65,11 @@ export class EditorModel {
 
   protected currentFile?: string
 
-  private models: Record<string, monaco.editor.ITextModel | undefined> = {}
+  private models: ModelList = {}
+
+  private modelStates: ModelStateList = {}
+
+  private focusTimeOut?: ReturnType<typeof setTimeout>
 
   findValues(modLang: IModLanguage): UGMRef {
     const scriptRawVal = initialCustom[modLang.script]
@@ -75,16 +88,16 @@ export class EditorModel {
   }
 
   createModel(modFileName: string, modLang: ModLanguage, modVal: string): void {
-    const fileName = `${modFileName}.${modLangExtensions[modLang]}`
-
-    const fileUri = monaco.Uri.file("/" + fileName)
-
     const existingModel = this.models[modFileName]
     if (existingModel) {
       existingModel.dispose()
       this.models[modFileName] = undefined
       delete this.models[modFileName]
     }
+
+    const fileName = `${modFileName}.${modLangExtensions[modLang]}`
+
+    const fileUri = monaco.Uri.file("/" + fileName)
 
     const model = monaco.editor.createModel(modVal, modLang, fileUri)
 
@@ -126,8 +139,8 @@ export class EditorModel {
     const libUri = "file:///mods.d.ts"
 
     monaco.typescript.typescriptDefaults.addExtraLib(libSource, libUri)
+    monaco.typescript.javascriptDefaults.addExtraLib(libSource, libUri)
 
-    this.createModel("ModTypes", "typescript", initialCustom.types)
     this.createModel("assets", "json", db.assets)
   }
 
@@ -150,8 +163,10 @@ export class EditorModel {
 
         const suggestions: monaco.languages.CompletionItem[] = []
 
+        const filesToFilter: string[] = [this.currentFile || "undefined", "assets"]
+
         Object.values(this.models)
-          .filter((model) => !model?.uri.path.includes(this.currentFile || "undefined"))
+          .filter((model) => !filesToFilter.some((str) => model?.uri.path.includes(str)))
           .forEach((model) => {
             if (!model) return
 
@@ -179,8 +194,21 @@ export class EditorModel {
     })
   }
 
+  private saveState(): void {
+    if (!this.currentFile || !this.editor) return
+
+    const lastState: IModelState = {
+      position: this.editor.getPosition() ?? undefined,
+      selection: this.editor.getSelection() ?? undefined
+    }
+
+    this.modelStates[this.currentFile] = lastState
+  }
+
   switchModel(fileName: string): void {
     if (this.currentFile === fileName || !this.editor) return
+
+    this.saveState()
 
     this.currentFile = fileName
 
@@ -190,16 +218,103 @@ export class EditorModel {
 
     this.editor.setModel(model)
     this.editor.updateOptions({ readOnly: fileName === "assets" })
+
+    const lastPosition = this.modelStates[fileName]?.position
+    if (lastPosition) {
+      this.editor.setPosition(lastPosition)
+      this.editor.revealPositionInCenter(lastPosition)
+    }
+
+    const lastSelection = this.modelStates[fileName]?.selection
+    if (lastSelection) this.editor.setSelection(lastSelection)
+
+    if (this.baseEditor) this.baseEditor.bottom.updateLanguage(model.getLanguageId() as ModLanguage)
+
+    this.setFucus()
   }
 
-  init(field: HTMLDivElement): void {
+  switchModelLang(fileName: string, modLang: ModLanguage): void {
+    const model = this.models[fileName]
+    if (!model) return
+
+    const modVal = model.getValue()
+
+    this.createModel(fileName, modLang, modVal)
+
+    if (this.currentFile && this.currentFile === fileName) {
+      this.currentFile = undefined
+      this.switchModel(fileName)
+    }
+  }
+
+  private listenToCursor(): void {
+    if (!this.editor) return
+
+    this.editor.onDidChangeCursorPosition((e) => {
+      if (!this.editor || !this.baseEditor) return
+
+      const { lineNumber, column } = e.position
+
+      this.baseEditor.bottom.updatePosition(lineNumber, column)
+    })
+
+    this.editor.onDidChangeCursorSelection((e) => {
+      if (!this.editor || !this.baseEditor) return
+
+      const model = this.editor.getModel()
+      if (!model) return
+
+      const valueInRange = model.getValueInRange(e.selection)
+
+      const valueLength = valueInRange.length
+
+      this.baseEditor.bottom.updateSelection(valueLength)
+    })
+  }
+
+  private clearFocus(): void {
+    if (this.focusTimeOut) {
+      clearTimeout(this.focusTimeOut)
+      this.focusTimeOut = undefined
+    }
+  }
+
+  private setFucus(n: number = 200): void {
+    this.clearFocus()
+
+    this.focusTimeOut = setTimeout(() => {
+      this.editor?.focus()
+      this.clearFocus()
+    }, n)
+  }
+
+  reset(modLang: IModLanguage, modVal: UGMRef): void {
+    const modelScript = this.models["CustomScript"]
+
+    const modelStyle = this.models["CustomStyle"]
+
+    if (modelScript) {
+      modelScript.setValue(modVal.script!)
+      this.switchModelLang("CustomScript", modLang.script)
+    }
+
+    if (modelStyle) {
+      modelStyle.setValue(modVal.style!)
+      this.switchModelLang("CustomStyle", modLang.style)
+    }
+  }
+
+  init(field: HTMLDivElement, baseEditor: Editor): void {
+    if (!this.baseEditor) this.baseEditor = baseEditor
+
     if (!this.isAutocompleteRegistered) {
       this.isAutocompleteRegistered = true
       this.registerFileAutocomplete("typescript")
       this.registerFileAutocomplete("javascript")
     }
 
-    const model = this.models["CustomScript"]
+    const model = this.models["CustomScript"] ?? monaco.editor.createModel("", "typescript", monaco.Uri.file("/testFile.ts"))
+
     this.currentFile = "CustomScript"
 
     const editor = monaco.editor.create(field, {
@@ -215,10 +330,16 @@ export class EditorModel {
       wordWrap: "on",
       renderWhitespace: "trailing",
       tabSize: 2,
-      model: model ?? monaco.editor.createModel("", "typescript", monaco.Uri.file("/testFile.ts"))
+      model
     })
 
     this.editor = editor
+
+    this.setFucus(1000)
+
+    baseEditor.bottom.updateLanguage(model.getLanguageId() as ModLanguage)
+
+    this.listenToCursor()
   }
 }
 

@@ -5,6 +5,35 @@ declare module "*.css"
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare type IAny = any
 
+declare interface KulonAsset {
+  [key: string]: {
+    src: string
+  }
+}
+
+declare interface IKulonAudioOptions {
+  fadeIn?: number
+  fadeOut?: number
+  id?: string
+  volume?: number
+  loop?: boolean
+  lossVol?: number
+}
+
+declare interface IKulonAudioConfig {
+  action: "play" | "stop"
+  type: "bgm" | "ui" | "sfx" | "footstep" | "peerfootstep" | "ambient"
+  id?: string
+  src?: string
+  options?: IKulonAudioOptions
+}
+
+declare interface KulonAudio {
+  emit(event: IKulonAudioConfig): void
+
+  stopAll(): void
+}
+
 declare interface IKulonLocale {
   id: string
   en: string
@@ -241,6 +270,8 @@ declare interface IKulonModConfig {
   peers: KulonPeers
   socket: KulonSocket
   job: KulonJob
+  asset: KulonAsset
+  audio: KulonAudio
   me: string
 }
 
@@ -250,6 +281,6 @@ declare interface KulonMod {
   addClaim?(state: string, status: boolean | string): void
   onInteract?(x: number, y: number, isRemote?: boolean, data?: IAny): void
   destroy(): void | Promise<void>
-  setGame?(game: KulonGame): void
+  setGame(game: KulonGame): void
   init(...args: IAny): void
 }

@@ -1,8 +1,20 @@
-import { kel } from "../lib/kel"
+import { futor, kel } from "../lib/kel"
 import { Editor } from "./Editor"
+import { ModLanguage } from "./types/CodeTypes"
 
 interface IEditorBottomConfig {
   editor: Editor
+}
+
+type ILangNames = Record<ModLanguage, string>
+
+const langNames: ILangNames = {
+  typescript: "TypeScript",
+  javascript: "JavaScript",
+  scss: "SCSS",
+  css: "CSS",
+  less: "Less",
+  json: "JSON"
 }
 
 export class EditorBottom {
@@ -11,6 +23,10 @@ export class EditorBottom {
   private el!: HTMLDivElement
 
   editor: Editor
+
+  private ePosition!: HTMLSpanElement
+  private eSelection!: HTMLSpanElement
+  private eLanguage!: HTMLSpanElement
 
   constructor(config: IEditorBottomConfig) {
     this.editor = config.editor
@@ -22,8 +38,8 @@ export class EditorBottom {
     this.el = kel("div", "kulon-code-bottom")
     this.el.innerHTML = `
     <div class="kulon-code-bottom-left">
-      <div class="code-lang"><i class="fa-light fa-brackets-curly fa-fw"></i> TypeScript</div>
-      <div class="code-pos">Ln 10, Col 40 (20 selected)</div>
+      <div class="code-lang"><i class="fa-light fa-brackets-curly fa-fw"></i> <span class="code-lang-val"></span></div>
+      <div class="code-pos"><span class="code-pos-val"></span> <span class="code-sel-val"></span></div>
     </div>
     <div class="kulon-code-bottom-right">
       <div class="btn code-compile">
@@ -32,9 +48,27 @@ export class EditorBottom {
         <div class="code-file">CustomGame.ts</div>
       </div>
     </div>`
+
+    this.ePosition = futor(".code-pos-val", this.el, "span")
+
+    this.eSelection = futor(".code-sel-val", this.el, "span")
+
+    this.eLanguage = futor(".code-lang-val", this.el, "span")
   }
 
   private writeData(): void {}
+
+  updateLanguage(modLang: ModLanguage): void {
+    this.eLanguage.innerHTML = langNames[modLang]
+  }
+
+  updatePosition(ln: number, col: number): void {
+    this.ePosition.innerHTML = `Ln ${ln}, Col ${col}`
+  }
+
+  updateSelection(n: number): void {
+    this.eSelection.innerHTML = n > 0 ? `(${n} selected)` : ""
+  }
 
   lock(status: boolean = true): void {
     this.locked = status

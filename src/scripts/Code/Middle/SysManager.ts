@@ -1,5 +1,8 @@
-import { kel } from "../../lib/kel"
+import { futor, kel, qutor } from "../../lib/kel"
+import { db, setEdiorDB } from "../data/db"
 import { EditorMiddle } from "../EditorMiddle"
+import { IModLanguage, ModLanguage, ModScriptLanguage, ModStyleLanguage, UGMRef } from "../types/CodeTypes"
+import { GenerateModValues } from "./GenerateModValues"
 
 interface ISysManagerConfig {
   middle: EditorMiddle
@@ -64,15 +67,84 @@ export class SysManager {
     </div>`
   }
 
-  private writeData(): void {}
+  private writeData(): void {
+    const scriptLang = db.modLanguage.script
+    const styleLang = db.modLanguage.style
+
+    const scriptChecked = qutor('[name="script-lang"]:checked', this.el, "input")
+    if (scriptChecked) scriptChecked.checked = false
+
+    const styleChecked = qutor('[name="script-lang"]:checked', this.el, "input")
+    if (styleChecked) styleChecked.checked = false
+
+    const radioScript = qutor(`#script-lang-${scriptLang}`, this.el, "input")
+    if (radioScript) radioScript.checked = true
+
+    const radioStyle = qutor(`#style-lang-${styleLang}`, this.el, "input")
+    if (radioStyle) radioStyle.checked = true
+  }
+
+  private scriptInputListener(): void {
+    const eScripts = this.el.querySelectorAll('[name="script-lang"]') as NodeListOf<HTMLInputElement>
+
+    eScripts.forEach((inp) => {
+      inp.onchange = () => this.switchLanguage("CustomScript", inp.value as ModScriptLanguage)
+    })
+  }
+  private styleInputListener(): void {
+    const eStyles = this.el.querySelectorAll('[name="style-lang"]') as NodeListOf<HTMLInputElement>
+
+    eStyles.forEach((inp) => {
+      inp.onchange = () => this.switchLanguage("CustomStyle", inp.value as ModStyleLanguage)
+    })
+  }
+
+  private switchLanguage(tabName: string, modLang: ModLanguage): void {
+    this.middle.tabs?.changeTabLang(tabName, modLang)
+    this.middle.textEditor?.switchFileLang(tabName, modLang)
+  }
+
+  private btnResetListener(): void {
+    const btnReset = futor(".btn-reset-files", this.el)
+
+    btnReset.onclick = () => {
+      if (this.middle.editor.locked) return
+      this.middle.lock()
+
+      const genModValues = new GenerateModValues()
+      genModValues.onDone((modLang, newModVal) => {
+        if (!modLang || !newModVal) {
+          this.middle.lock(false)
+          return
+        }
+
+        this.onFilesReset(modLang, newModVal)
+      })
+      genModValues.init()
+    }
+  }
+
+  private onFilesReset(modLang: IModLanguage, modVal: UGMRef): void {
+    this.middle.lock(false)
+
+    setEdiorDB(modLang, { ...modVal, assets: db.assets })
+
+    this.middle.textEditor?.resetFiles(modLang, modVal)
+  }
 
   get html(): HTMLDivElement {
     return this.el
   }
 
+  start(): void {
+    this.writeData()
+    this.scriptInputListener()
+    this.styleInputListener()
+    this.btnResetListener()
+  }
+
   init(): this {
     this.createElement()
-    this.writeData()
     return this
   }
 }

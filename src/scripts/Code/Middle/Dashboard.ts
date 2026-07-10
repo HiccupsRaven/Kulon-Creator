@@ -2,7 +2,7 @@ import { idb } from "../../lib/idb"
 import { futor, kel } from "../../lib/kel"
 import sdate from "../../lib/sdate"
 import { setInitDB } from "../data/db"
-import { scriptIcons, styleIcons } from "../data/EditorModel"
+import { langIcons } from "../data/EditorModel"
 import { EditorMiddle } from "../EditorMiddle"
 import { UGMRefExtended, UGMTree } from "../types/CodeTypes"
 import { GenerateModValues } from "./GenerateModValues"
@@ -91,11 +91,11 @@ export class Dashboard {
     const eTech = futor(".card-tech", card, "div")
 
     if (ugm.modLanguage) {
-      const faScriptIcon = scriptIcons[ugm.modLanguage.script]
+      const faScriptIcon = langIcons[ugm.modLanguage.script]
 
       const techScript = kel("i", `fa-brands fa-${faScriptIcon} fa-fw`)
 
-      const faStyleIcon = styleIcons[ugm.modLanguage.style]
+      const faStyleIcon = langIcons[ugm.modLanguage.style]
 
       const techStyle = kel("i", `fa-brands fa-${faStyleIcon} fa-fw`)
 
@@ -121,8 +121,13 @@ export class Dashboard {
 
     const genModValues = new GenerateModValues()
     genModValues.onDone((modLang, newModVal) => {
+      if (!modLang || !newModVal) {
+        this.middle.lock(false)
+        return
+      }
       this.goToTextEditor({ ...ugm, modLanguage: modLang }, { ...modValues, ...newModVal })
     })
+    // genModValues.noCancel()
     genModValues.init()
   }
 

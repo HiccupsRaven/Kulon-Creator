@@ -231,7 +231,13 @@ export class Virtualdb {
   async getModValues(projectId: string): Promise<UGMRefExtended> {
     const scriptFile = await vfs.readFile(projectId, modsPath, "Script")
     const styleFile = await vfs.readFile(projectId, modsPath, "Style")
-    const assetsFile = await vfs.readFile(projectId, sysPath, "assets.json")
+    const assetsRawAny = await vfs.readFile(projectId, sysPath, "assets.json")
+
+    const assetsRawFile = (assetsRawAny ?? []) as IAssets
+
+    const assetsMinFile = assetsRawFile.map((itm) => ({ id: itm.id, name: itm.name, type: itm.type }))
+
+    const assetsFile = JSON.stringify(assetsMinFile, null, 2)
 
     return { script: scriptFile, style: styleFile, assets: assetsFile }
   }

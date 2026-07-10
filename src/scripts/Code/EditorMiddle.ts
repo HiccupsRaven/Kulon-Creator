@@ -66,6 +66,8 @@ export class EditorMiddle {
     this.tabs.init()
     this.textEditor.init()
 
+    this.sysManager.start()
+
     this.midleft.append(this.tabs.html, this.textEditor.html)
   }
 

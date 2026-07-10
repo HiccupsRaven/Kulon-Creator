@@ -1,6 +1,6 @@
 import { KelementAttr, SSKelement } from "../types/LibTypes"
 
-export function qutor(classnames: string, parent?: HTMLElement): SSKelement | null {
+export function qutor<KelementTag extends keyof HTMLElementTagNameMap>(classnames: string, parent?: HTMLElement, _tagName?: KelementTag): HTMLElementTagNameMap[KelementTag] | null {
   const el = parent ?? document.body
   return el.querySelector(classnames)
 }

@@ -1,5 +1,7 @@
 @use "../variables" as v;
 
+$btmColor: #676185;
+
 .kulon-code-bottom {
   flex-shrink: 0;
   width: 100%;
@@ -10,7 +12,7 @@
   gap: v.$mediumPadding;
   border-top: 1px solid v.$px3;
   .kulon-code-bottom-left {
-    color: v.$sgray;
+    color: $btmColor;
     display: flex;
     justify-content: start;
     align-items: center;
@@ -27,7 +29,7 @@
       justify-content: center;
       align-items: center;
       gap: 5px;
-      color: v.$sgray;
+      color: $btmColor;
       height: 100%;
       padding: v.$smallPadding v.$mediumPadding;
       &:hover {

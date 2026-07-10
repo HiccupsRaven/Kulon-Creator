@@ -1,27 +1,28 @@
 /*IMPORTSTYLE*/
-import { IKulonModConfig, KulonGame, KulonJob, KulonMod, KulonPeers, KulonSocket } from "./ModTypes"
 
 export class CustomGame implements KulonMod {
   readonly id: string = "custom-game"
 
   game!: KulonGame
 
-  me: string
-
   job: KulonJob
-
   peers: KulonPeers
-
   socket: KulonSocket
 
+  asset: KulonAsset
+  audio: KulonAudio
+
+  me: string
+
   constructor(config: IKulonModConfig) {
-    this.me = config.me
-
     this.job = config.job
-
     this.socket = config.socket
-
     this.peers = config.peers
+
+    this.asset = config.asset
+    this.audio = config.audio
+
+    this.me = config.me
   }
 
   setGame(game: KulonGame): void {

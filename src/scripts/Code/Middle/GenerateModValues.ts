@@ -1,5 +1,5 @@
 import { iform } from "../../Creator/Editor/Forms/TemplateForm"
-import { eroot } from "../../lib/kel"
+import { eroot, futor } from "../../lib/kel"
 import modal from "../../lib/modal"
 import { editorModel } from "../data/EditorModel"
 import { IModLanguage, ModScriptLanguage, ModStyleLanguage, UGMRef } from "../types/CodeTypes"
@@ -9,7 +9,11 @@ export class GenerateModValues {
 
   private el!: HTMLFormElement
 
-  private onSubmission?: (modLang: IModLanguage, modValues: UGMRef) => void
+  private onSubmission?: (modLang?: IModLanguage, modValues?: UGMRef) => void
+
+  constructor() {
+    this.createElement()
+  }
 
   private createElement(): void {
     this.el = iform(`
@@ -32,8 +36,8 @@ export class GenerateModValues {
               <div class="i">
                 <div class="radio">
                   <label for="formgen-script-lang-typescript">
-                    <input type="radio" name="formgen-script-lang" id="formgen-script-lang-typescript" value="typescript" />
-                    <span><i class="fa-brands fa-typescript fa-fw"></i> TypeScript</span>
+                    <input type="radio" name="formgen-script-lang" id="formgen-script-lang-typescript" value="typescript" checked />
+                    <span><i class="fa-brands fa-typescript fa-fw"></i> TypeScript <i class="fa-solid fa-thumbs-up"></i></span>
                   </label>
                 </div>
               </div>
@@ -58,7 +62,7 @@ export class GenerateModValues {
                 <div class="radio">
                   <label for="formgen-style-lang-scss">
                     <input type="radio" name="formgen-style-lang" id="formgen-style-lang-scss" value="scss" />
-                    <span><i class="fa-brands fa-sass fa-fw"></i> SCSS</span>
+                    <span><i class="fa-brands fa-sass fa-fw"></i> SCSS <i class="fa-solid fa-thumbs-up"></i></span>
                   </label>
                 </div>
               </div>
@@ -73,7 +77,7 @@ export class GenerateModValues {
               <div class="i">
                 <div class="radio">
                   <label for="formgen-style-lang-css">
-                    <input type="radio" name="formgen-style-lang" id="formgen-style-lang-css" value="css" />
+                    <input type="radio" name="formgen-style-lang" id="formgen-style-lang-css" value="css" checked />
                     <span><i class="fa-brands fa-css3 fa-fw"></i> CSS</span>
                   </label>
                 </div>
@@ -90,6 +94,9 @@ export class GenerateModValues {
         </div>
       </div>
       <div class="f">
+        <div class="s field-cancel">
+          <div class="btn btn-cancel">CANCEL</div>
+        </div>
         <div class="s">
           <button class="btn btn-ok">OK</button>
         </div>
@@ -134,17 +141,30 @@ export class GenerateModValues {
     }
   }
 
+  private btnCancelListener(): void {
+    const btnCancel = futor(".btn-cancel", this.el)
+    btnCancel.onclick = () => {
+      if (this.locked) return
+      this.destroy()
+    }
+  }
+
   private setModValues(modLang: IModLanguage): void {
     const modValues = editorModel.findValues(modLang)
 
     this.destroy(modLang, modValues)
   }
 
-  onDone(newFunc?: (modLang: IModLanguage, modValues: UGMRef) => void): void {
+  noCancel(): void {
+    const cancelField = futor(".field-cancel", this.el)
+    cancelField.classList.add("hide")
+  }
+
+  onDone(newFunc?: (modLang?: IModLanguage, modValues?: UGMRef) => void): void {
     this.onSubmission = newFunc
   }
 
-  destroy(modLang: IModLanguage, modValues: UGMRef): void {
+  destroy(modLang?: IModLanguage, modValues?: UGMRef): void {
     this.el.remove()
     if (this.onSubmission) {
       this.onSubmission(modLang, modValues)
@@ -153,8 +173,8 @@ export class GenerateModValues {
   }
 
   init(): void {
-    this.createElement()
     eroot().append(this.el)
     this.submitListener()
+    this.btnCancelListener()
   }
 }

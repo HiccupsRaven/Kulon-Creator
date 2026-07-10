@@ -2,6 +2,7 @@ import { futor, kel } from "../../lib/kel"
 import { db } from "../data/db"
 import { editorModel } from "../data/EditorModel"
 import { EditorMiddle } from "../EditorMiddle"
+import { IModLanguage, ModLanguage, UGMRef } from "../types/CodeTypes"
 
 interface ITextEditorConfig {
   middle: EditorMiddle
@@ -40,7 +41,7 @@ export class TextEditor {
     editorModel.createModel("CustomScript", db.modLanguage.script, db.script)
     editorModel.createModel("CustomStyle", db.modLanguage.style, db.style)
 
-    editorModel.init(this.codeEditor)
+    editorModel.init(this.codeEditor, this.middle.editor)
 
     this.middle.tabs?.activate("CustomScript")
   }
@@ -49,6 +50,14 @@ export class TextEditor {
     if (this.middle.editor.locked) return
 
     editorModel.switchModel(modFileName)
+  }
+
+  switchFileLang(fileName: string, modLang: ModLanguage): void {
+    editorModel.switchModelLang(fileName, modLang)
+  }
+
+  resetFiles(modLang: IModLanguage, modVal: UGMRef): void {
+    editorModel.reset(modLang, modVal)
   }
 
   get html(): HTMLDivElement {

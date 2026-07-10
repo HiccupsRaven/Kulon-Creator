@@ -1,7 +1,8 @@
 import { kel } from "../../lib/kel"
 import { db } from "../data/db"
-import { modLangExtensions, scriptIcons, styleIcons } from "../data/EditorModel"
+import { langIcons, modLangExtensions } from "../data/EditorModel"
 import { EditorMiddle } from "../EditorMiddle"
+import { ModLanguage } from "../types/CodeTypes"
 import { TabButton } from "./TabButton"
 
 interface ITabsConfig {
@@ -41,7 +42,7 @@ export class Tabs {
         tabs: this,
         name: "CustomScript",
         ext: modLangExtensions[scriptType],
-        ic: `brands fa-${scriptIcons[scriptType]}`
+        ic: `brands fa-${langIcons[scriptType]}`
       })
     )
 
@@ -50,7 +51,7 @@ export class Tabs {
         tabs: this,
         name: "CustomStyle",
         ext: modLangExtensions[styleType],
-        ic: `brands fa-${styleIcons[styleType]}`
+        ic: `brands fa-${langIcons[styleType]}`
       })
     )
 
@@ -87,6 +88,17 @@ export class Tabs {
 
   onTabSave(name: string): void {
     console.log(`Saving ${name}`)
+  }
+
+  changeTabLang(tabName: string, modLang: ModLanguage): void {
+    const tab = this.list.find((itm) => itm.name === tabName)
+    if (!tab) return
+
+    tab.updateFile({
+      name: tab.name,
+      ic: `brands fa-${langIcons[modLang]}`,
+      ext: modLangExtensions[modLang]
+    })
   }
 
   get html(): HTMLDivElement {

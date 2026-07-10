@@ -24,13 +24,18 @@ export function setInitDB(ugm: UGMTree, modValues: UGMRefExtended): void {
   db.created = Number(ugm.created)
   db.modified = Number(ugm.modified)
   db.project = ugm.project.toString()
-  db.modLanguage = toObject(ugm.modLanguage)
+
+  setEdiorDB(ugm.modLanguage!, modValues)
+}
+
+export function setEdiorDB(modLang: IModLanguage, modValues: UGMRefExtended): void {
+  db.modLanguage = toObject(modLang)
 
   const script = modValues.script?.toString() || ""
   const style = modValues.style?.toString() || ""
-  const assets = modValues.assets
+  const assets = modValues.assets?.toString() || ""
 
   db.script = script
   db.style = style
-  db.assets = JSON.stringify(assets ?? [], null, 2)
+  db.assets = assets
 }
