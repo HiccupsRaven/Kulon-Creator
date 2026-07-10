@@ -23,7 +23,24 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: monospace, monospace;
+    overflow: hidden;
+    .top-mid-path {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      span {
+        flex-shrink: 0;
+      }
+      .path-name {
+        flex-shrink: 1;
+        overflow: hidden;
+        font-family: monospace, monospace;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
   }
   .kulon-code-top-right {
     height: 100%;

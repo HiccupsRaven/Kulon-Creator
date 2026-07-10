@@ -1,6 +1,7 @@
 import { idb } from "../../lib/idb"
 import { futor, kel } from "../../lib/kel"
 import sdate from "../../lib/sdate"
+import waittime from "../../lib/waittime"
 import { setInitDB } from "../data/db"
 import { langIcons } from "../data/EditorModel"
 import { EditorMiddle } from "../EditorMiddle"
@@ -102,14 +103,19 @@ export class Dashboard {
       eTech.innerHTML = '<i class="fa-solid fa-brackets-curly"></i>'
     }
 
-    card.onclick = () => this.setModValues(ugm)
+    const cardIcon = futor(".card-icons", card, "div")
+
+    card.onclick = () => this.setModValues(ugm, cardIcon)
 
     return card
   }
 
-  private async setModValues(ugm: UGMTree): Promise<void> {
+  private async setModValues(ugm: UGMTree, card: HTMLDivElement): Promise<void> {
     if (this.middle.editor.locked) return
     this.middle.lock()
+
+    card.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>'
+    await waittime()
 
     const modValues: UGMRefExtended = await idb.getModValues(ugm.id)
 
@@ -118,7 +124,7 @@ export class Dashboard {
     const langExists = typeof ugm.modLanguage !== "undefined"
 
     if (langExists && scriptExist && styleExist) {
-      return this.goToTextEditor(ugm, modValues)
+      return this.goToTextEditor(ugm, modValues, card)
     }
 
     const genModValues = new GenerateModValues()
@@ -127,16 +133,26 @@ export class Dashboard {
         this.middle.lock(false)
         return
       }
-      this.goToTextEditor({ ...ugm, modLanguage: modLang }, { ...modValues, ...newModVal })
+
+      idb.saveMod(ugm.id, newModVal, modLang)
+
+      this.goToTextEditor({ ...ugm, modLanguage: modLang }, { ...modValues, ...newModVal }, card)
     })
-    // genModValues.noCancel()
+
+    card.innerHTML = '<i class="fa-solid fa-folder-open fa-fw"></i>'
     genModValues.init()
   }
 
-  private async goToTextEditor(ugm: UGMTree, modValues: UGMRefExtended): Promise<void> {
+  private async goToTextEditor(ugm: UGMTree, modValues: UGMRefExtended, card: HTMLDivElement): Promise<void> {
+    card.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>'
+
+    await waittime()
+
     setInitDB(ugm, modValues)
 
     this.middle.editor.top.setProjectName(ugm.id, ugm.project)
+
+    card.innerHTML = '<i class="fa-solid fa-folder-open fa-fw"></i>'
 
     this.middle.lock(false)
 

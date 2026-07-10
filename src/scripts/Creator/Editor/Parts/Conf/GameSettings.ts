@@ -1,7 +1,7 @@
 import { eroot, futor, kel } from "../../../../lib/kel"
 import { db } from "../../../data/db"
 import { Editor } from "../../../Editor"
-import { toObject } from "../../../lib/gen"
+import { toObject, toText } from "../../../lib/gen"
 import { DirectionType, IGameSettings, IWorldSpawnRule } from "../../../types/CreatorTypes"
 import { createSpawnFields, createSpawnRadio } from "./Settings/spawners"
 
@@ -263,9 +263,9 @@ export class GameSettings {
                   <div class="i">
                     <br /><br />
                     <div class="tx center"><b>Custom Scripts</b></div>
-                    <div class="tx center">Open your Kulon's Project folder, then navigate to <span class="mono">MyProjects/${db.meta.id}/Mods</span>, and write your code!</div>
+                    <div class="tx center">Open Kulon Custom Game Code, navigate to <span class="mono">root:/kulon/usr/${toText(db.settings.project)}</span>, then write your code!</div>
                     <br />
-                    <div class="btn btn-find find-scripts">Preview Scripts</div>
+                    <div class="btn btn-find find-scripts">Open Custom Code Panel</div>
                     <br /><br />
                   </div>
                 </div>
@@ -494,6 +494,29 @@ export class GameSettings {
     last_nav = id
   }
 
+  private onCodePanelClick(): void {
+    const btnCodePanel = futor(".find-scripts", this.el)
+    btnCodePanel.onclick = () => {
+      const wPadding = 50
+      const hPadding = 100
+
+      const screenWidth = window.screen.width
+      const screenHeight = window.screen.height
+
+      const width = screenWidth - wPadding * 2
+      const height = screenHeight - hPadding * 2
+
+      const winFeature = `resizable=no, width=${width}, height=${height}, top=${wPadding - 20}, left=${wPadding}`
+
+      const canOpen = window.open("/code.html?windowed=true", "popupWindow", winFeature)
+
+      if (!canOpen) {
+        window.location.href = "/code.html?windowed=false"
+        return
+      }
+    }
+  }
+
   private submitListener(): void {
     this.form.onsubmit = (e) => {
       e.preventDefault()
@@ -652,6 +675,7 @@ export class GameSettings {
     this.navListener()
     this.writeField()
     this.updateData()
+    this.onCodePanelClick()
     this.submitListener()
     this.closeListener()
     return this

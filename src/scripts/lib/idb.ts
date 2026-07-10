@@ -4,7 +4,7 @@ import { FileDataType, IFileRep, IFileRes, IReplaceFile, ISendFile } from "../ty
 import { astPath, modsPath, sysPath } from "./dbVar"
 import { genStringId, rStr, sanitizeName } from "../Creator/lib/gen"
 import { vfs } from "./VirtualFileSystem"
-import { UGMRef, UGMRefExtended, UGMTree } from "../Code/types/CodeTypes"
+import { IModLanguage, UGMRef, UGMRefExtended, UGMTree } from "../Code/types/CodeTypes"
 
 export class Virtualdb {
   data: UGCData = {}
@@ -226,7 +226,7 @@ export class Virtualdb {
 
       modTree.modified = metaFile.modified
 
-      if (modlangFile) modTree.modLanguage = JSON.parse(modlangFile || {})
+      if (modlangFile) modTree.modLanguage = modlangFile || {}
 
       modsTree.push(modTree as UGMTree)
     }
@@ -247,12 +247,20 @@ export class Virtualdb {
 
     return { script: scriptFile, style: styleFile, assets: assetsFile }
   }
-  async saveMod(projectId: string, ugm: UGMRef, modLang: string): Promise<void> {
-    await vfs.saveFile(projectId, modsPath, "modlang.json", "json", modLang || "")
+  async saveMod(projectId: string, ugm: UGMRef, modLang: IModLanguage): Promise<void> {
+    await vfs.saveFile(projectId, modsPath, "modlang.json", "json", modLang)
 
     await vfs.saveFile(projectId, modsPath, "Script", "script", ugm.script || "")
 
     await vfs.saveFile(projectId, modsPath, "Style", "style", ugm.style || "")
+
+    const metaFile = await vfs.readFile(projectId, sysPath, "meta.json")
+
+    const metaRef: UGCMeta = metaFile
+
+    metaRef.modified = Date.now()
+
+    await vfs.saveFile(projectId, sysPath, "meta.json", "json", metaRef)
   }
 }
 

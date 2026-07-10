@@ -38,7 +38,7 @@ export class Dashboard {
     <div class="Dashboard-Content">
       <div class="Dashboard-About">
         <div class="Dashboard-Meta">
-          <div class="Dashboard-Title">Kulon UGC Creator</div>
+          <div class="Dashboard-Title">Kulon Game Creator</div>
           <div class="Dashboard-Desc">by <a href="https://devanka.id" target="_blank">Devanka 761</a></div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { iform } from "../../Creator/Editor/Forms/TemplateForm"
 import { eroot, futor } from "../../lib/kel"
 import modal from "../../lib/modal"
+import waittime from "../../lib/waittime"
 import { editorModel } from "../data/EditorModel"
 import { IModLanguage, ModScriptLanguage, ModStyleLanguage, UGMRef } from "../types/CodeTypes"
 
@@ -136,6 +137,11 @@ export class GenerateModValues {
       }
 
       this.locked = false
+
+      const btnOk = futor(".btn-ok", this.el)
+      btnOk.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>'
+
+      await waittime()
 
       this.setModValues(modLang as IModLanguage)
     }

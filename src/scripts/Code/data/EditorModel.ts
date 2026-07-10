@@ -341,6 +341,38 @@ export class EditorModel {
     this.baseEditor?.middle.tabs?.setDirty("CustomStyle", true)
   }
 
+  private setCommands(): void {
+    if (!this.editor) return
+
+    this.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
+      this.saveModel(this.currentFile || "undefined")
+    })
+
+    this.editor.addCommand(monaco.KeyMod.Alt | monaco.KeyCode.PageDown, () => {
+      const modelKeys = Object.keys(this.models)
+      const modelSize = modelKeys.length
+
+      const currentIdx = modelKeys.findIndex((k) => k === this.currentFile)
+      const findIdx = currentIdx + 1
+
+      const nextIdx = findIdx >= modelSize ? 0 : findIdx
+
+      this.switchModel(modelKeys[nextIdx])
+    })
+
+    this.editor.addCommand(monaco.KeyMod.Alt | monaco.KeyCode.PageUp, () => {
+      const modelKeys = Object.keys(this.models)
+      const modelSize = modelKeys.length
+
+      const currentIdx = modelKeys.findIndex((k) => k === this.currentFile)
+      const findIdx = currentIdx - 1
+
+      const nextIdx = findIdx < 0 ? modelSize - 1 : findIdx
+
+      this.switchModel(modelKeys[nextIdx])
+    })
+  }
+
   init(field: HTMLDivElement, baseEditor: Editor): void {
     if (!this.baseEditor) this.baseEditor = baseEditor
 
@@ -370,13 +402,11 @@ export class EditorModel {
 
     this.editor = editor
 
-    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
-      this.saveModel(this.currentFile || "undefined")
-    })
-
     this.setFocus(1000)
 
     this.switchModel("CustomScript", true)
+
+    this.setCommands()
 
     this.listenToCursor()
   }

@@ -73,7 +73,7 @@ export class EditorBottom {
   }
 
   async uploadSave(): Promise<void> {
-    const modLang = JSON.stringify(db.modLanguage || {})
+    const modLang = db.modLanguage
 
     await idb.saveMod(db.id, { script: db.script, style: db.style }, modLang)
   }
