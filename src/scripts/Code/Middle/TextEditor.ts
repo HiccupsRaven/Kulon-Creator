@@ -38,12 +38,12 @@ export class TextEditor {
   }
 
   private createEditor(): void {
-    editorModel.createModel("CustomScript", db.modLanguage.script, db.script)
-    editorModel.createModel("CustomStyle", db.modLanguage.style, db.style)
+    editorModel.createModel("customScript", db.modLanguage.script, db.script)
+    editorModel.createModel("customStyle", db.modLanguage.style, db.style)
 
     editorModel.init(this.codeEditor, this.middle.editor)
 
-    this.middle.tabs?.activate("CustomScript")
+    this.middle.tabs?.activate("customScript")
   }
 
   switchEditor(modFileName: string): void {
@@ -62,6 +62,10 @@ export class TextEditor {
 
   saveModel(fileName: string): void {
     editorModel.saveModel(fileName)
+  }
+
+  get errorList(): string[] {
+    return editorModel.getErrors()
   }
 
   get isSwitchLocked(): boolean {

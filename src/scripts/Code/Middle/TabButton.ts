@@ -93,6 +93,10 @@ export class TabButton {
     }
   }
 
+  get isDirty(): boolean {
+    return this.isChanged
+  }
+
   get html(): HTMLDivElement {
     return this.el
   }

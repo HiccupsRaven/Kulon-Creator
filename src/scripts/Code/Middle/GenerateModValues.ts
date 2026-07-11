@@ -12,11 +12,26 @@ export class GenerateModValues {
 
   private onSubmission?: (modLang?: IModLanguage, modValues?: UGMRef) => void
 
-  constructor() {
+  private scriptLang?: ModScriptLanguage
+  private styleLang?: ModStyleLanguage
+
+  constructor(lang?: IModLanguage) {
+    this.scriptLang = lang?.script
+    this.styleLang = lang?.style
+
     this.createElement()
   }
 
   private createElement(): void {
+    const sc = this.scriptLang
+    const st = this.styleLang
+
+    const tsChecked = sc === "typescript" ? " checked" : ""
+    const jsChecked = sc === "javascript" ? " checked" : ""
+    const scssChecked = st === "scss" ? " checked" : ""
+    const lessChecked = st === "less" ? " checked" : ""
+    const cssChecked = st === "css" ? " checked" : ""
+
     this.el = iform(`
     <div class="box">
       <div class="f">
@@ -31,13 +46,13 @@ export class GenerateModValues {
       </div>
       <div class="f">
         <div class="i">
-          <label for="formgen-script-lang">Script Language</label>
+          <p class="tx">Script Language</p>
           <div class="inp">
             <div class="f p">
               <div class="i">
                 <div class="radio">
                   <label for="formgen-script-lang-typescript">
-                    <input type="radio" name="formgen-script-lang" id="formgen-script-lang-typescript" value="typescript" checked />
+                    <input type="radio" name="formgen-script-lang" id="formgen-script-lang-typescript" value="typescript"${tsChecked} />
                     <span><i class="fa-brands fa-typescript fa-fw"></i> TypeScript <i class="fa-solid fa-thumbs-up"></i></span>
                   </label>
                 </div>
@@ -45,7 +60,7 @@ export class GenerateModValues {
               <div class="i">
                 <div class="radio">
                   <label for="formgen-script-lang-javascript">
-                    <input type="radio" name="formgen-script-lang" id="formgen-script-lang-javascript" value="javascript" />
+                    <input type="radio" name="formgen-script-lang" id="formgen-script-lang-javascript" value="javascript"${jsChecked} />
                     <span><i class="fa-brands fa-js fa-fw"></i> JavaScript</span>
                   </label>
                 </div>
@@ -56,13 +71,13 @@ export class GenerateModValues {
       </div>
       <div class="f">
         <div class="i">
-          <label for="formgen-style-lang">Style Language</label>
+          <p class="tx">Style Language</p>
           <div class="inp">
             <div class="f p">
               <div class="i">
                 <div class="radio">
                   <label for="formgen-style-lang-scss">
-                    <input type="radio" name="formgen-style-lang" id="formgen-style-lang-scss" value="scss" />
+                    <input type="radio" name="formgen-style-lang" id="formgen-style-lang-scss" value="scss"${scssChecked} />
                     <span><i class="fa-brands fa-sass fa-fw"></i> SCSS <i class="fa-solid fa-thumbs-up"></i></span>
                   </label>
                 </div>
@@ -70,7 +85,7 @@ export class GenerateModValues {
               <div class="i">
                 <div class="radio">
                   <label for="formgen-style-lang-less">
-                    <input type="radio" name="formgen-style-lang" id="formgen-style-lang-less" value="less" />
+                    <input type="radio" name="formgen-style-lang" id="formgen-style-lang-less" value="less"${lessChecked} />
                     <span><i class="fa-brands fa-less fa-fw"></i> Less</span>
                   </label>
                 </div>
@@ -78,7 +93,7 @@ export class GenerateModValues {
               <div class="i">
                 <div class="radio">
                   <label for="formgen-style-lang-css">
-                    <input type="radio" name="formgen-style-lang" id="formgen-style-lang-css" value="css" checked />
+                    <input type="radio" name="formgen-style-lang" id="formgen-style-lang-css" value="css"${cssChecked} />
                     <span><i class="fa-brands fa-css3 fa-fw"></i> CSS</span>
                   </label>
                 </div>

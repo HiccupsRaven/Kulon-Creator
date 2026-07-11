@@ -84,12 +84,12 @@ export class EditorModel {
     const scriptRawVal = initialCustom[modLang.script]
     const styleVal = initialCustom[modLang.style]
 
-    const styleImportLine = `import "./CustomStyle.${modLangExtensions[modLang.style]}"`
+    // const styleImportLine = `import "./CustomStyle.${modLangExtensions[modLang.style]}"`
 
-    const scriptVal = scriptRawVal.replace("/*IMPORTSTYLE*/", styleImportLine)
+    // const scriptVal = scriptRawVal.replace("/*IMPORTSTYLE*/", styleImportLine)
 
     const filesValue: UGMRef = {
-      script: scriptVal,
+      script: scriptRawVal,
       style: styleVal
     }
 
@@ -134,6 +134,8 @@ export class EditorModel {
     const model = this.models[fileName]
     if (!model) return
 
+    this.lockSwitchModel(1000)
+
     const actionExists = this.editor?.getAction("editor.action.formatDocument")
     if (actionExists) await actionExists.run()
 
@@ -143,7 +145,7 @@ export class EditorModel {
 
     this.setFocus()
 
-    const fileType = fileName === "CustomScript" ? "script" : "style"
+    const fileType = fileName === "customScript" ? "script" : "style"
 
     db[fileType] = model.getValue()
 
@@ -313,14 +315,14 @@ export class EditorModel {
     }, n)
   }
 
-  private lockSwitchModel(): void {
+  private lockSwitchModel(n: number = 300): void {
     this.isModelWait = true
-    setTimeout(() => (this.isModelWait = false), 300)
+    setTimeout(() => (this.isModelWait = false), n)
   }
 
-  private lockSwitchLang(): void {
+  private lockSwitchLang(n: number = 300): void {
     this.isLangWait = true
-    setTimeout(() => (this.isLangWait = false), 300)
+    setTimeout(() => (this.isLangWait = false), n)
   }
 
   get canSwitch(): boolean {
@@ -328,17 +330,17 @@ export class EditorModel {
   }
 
   reset(modLang: IModLanguage, modVal: UGMRef): void {
-    const modelScript = this.models["CustomScript"]
+    const modelScript = this.models["customScript"]
 
-    const modelStyle = this.models["CustomStyle"]
+    const modelStyle = this.models["customStyle"]
 
-    if (modelScript) this.switchlLang("CustomScript", modLang.script, modVal.script)
-    if (modelStyle) this.switchlLang("CustomStyle", modLang.style, modVal.style)
+    if (modelScript) this.switchlLang("customScript", modLang.script, modVal.script)
+    if (modelStyle) this.switchlLang("customStyle", modLang.style, modVal.style)
 
-    this.baseEditor?.middle.sysManager.restart()
+    this.baseEditor?.middle.sysManager.restart(modLang.script, modLang.style)
 
-    this.baseEditor?.middle.tabs?.setDirty("CustomScript", true)
-    this.baseEditor?.middle.tabs?.setDirty("CustomStyle", true)
+    this.baseEditor?.middle.tabs?.setDirty("customScript", true)
+    this.baseEditor?.middle.tabs?.setDirty("customStyle", true)
   }
 
   private setCommands(): void {
@@ -373,6 +375,33 @@ export class EditorModel {
     })
   }
 
+  getErrors(): string[] {
+    const script = this.models["customScript"]!
+    const style = this.models["customStyle"]!
+
+    const scriptMarkers = monaco.editor.getModelMarkers({ resource: script.uri })
+    const styleMarkers = monaco.editor.getModelMarkers({ resource: style.uri })
+
+    const scriptErrors = scriptMarkers.filter((marker) => marker.severity === monaco.MarkerSeverity.Error)
+    const styleErrors = styleMarkers.filter((marker) => marker.severity === monaco.MarkerSeverity.Error)
+
+    return this.parseError(scriptErrors, styleErrors)
+  }
+
+  private parseError(err1: monaco.editor.IMarker[], err2: monaco.editor.IMarker[]): string[] {
+    const err: string[] = []
+
+    err1.forEach((itm) => {
+      err.push(`.${itm.resource.path} ${itm.startLineNumber}:${itm.startColumn}\n${itm.message}`)
+    })
+
+    err2.forEach((itm) => {
+      err.push(`.${itm.resource.path} ${itm.startLineNumber}:${itm.startColumn}\n${itm.message}`)
+    })
+
+    return err
+  }
+
   init(field: HTMLDivElement, baseEditor: Editor): void {
     if (!this.baseEditor) this.baseEditor = baseEditor
 
@@ -382,7 +411,7 @@ export class EditorModel {
       this.registerFileAutocomplete("javascript")
     }
 
-    this.currentFile = "CustomScript"
+    this.currentFile = "customScript"
 
     const editor = monaco.editor.create(field, {
       fontFamily: `"JetBrains Mono", "MonoLisa", monospace, monospace`,
@@ -404,7 +433,7 @@ export class EditorModel {
 
     this.setFocus(1000)
 
-    this.switchModel("CustomScript", true)
+    this.switchModel("customScript", true)
 
     this.setCommands()
 

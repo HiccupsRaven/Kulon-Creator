@@ -1,5 +1,3 @@
-/*IMPORTSTYLE*/
-
 export class CustomGame implements KulonMod {
   readonly id: string = "custom-game"
 

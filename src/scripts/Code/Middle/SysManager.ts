@@ -67,9 +67,9 @@ export class SysManager {
     </div>`
   }
 
-  private writeData(): void {
-    const scriptLang = db.modLanguage.script
-    const styleLang = db.modLanguage.style
+  private writeData(langScript?: ModScriptLanguage, langStyle?: ModStyleLanguage): void {
+    const scriptLang = langScript ?? db.modLanguage.script
+    const styleLang = langStyle ?? db.modLanguage.style
 
     const scriptChecked = qutor('[name="script-lang"]:checked', this.el, "input")
     if (scriptChecked) scriptChecked.checked = false
@@ -88,14 +88,14 @@ export class SysManager {
     const eScripts = this.el.querySelectorAll('[name="script-lang"]') as NodeListOf<HTMLInputElement>
 
     eScripts.forEach((inp) => {
-      inp.onchange = () => this.switchLanguage("CustomScript", inp.value as ModScriptLanguage)
+      inp.onchange = () => this.switchLanguage("customScript", inp.value as ModScriptLanguage)
     })
   }
   private styleInputListener(): void {
     const eStyles = this.el.querySelectorAll('[name="style-lang"]') as NodeListOf<HTMLInputElement>
 
     eStyles.forEach((inp) => {
-      inp.onchange = () => this.switchLanguage("CustomStyle", inp.value as ModStyleLanguage)
+      inp.onchange = () => this.switchLanguage("customStyle", inp.value as ModStyleLanguage)
     })
   }
 
@@ -110,7 +110,7 @@ export class SysManager {
       if (this.middle.editor.locked) return
       this.middle.lock()
 
-      const genModValues = new GenerateModValues()
+      const genModValues = new GenerateModValues(db.modLanguage)
       genModValues.onDone((modLang, newModVal) => {
         if (!modLang || !newModVal) {
           this.middle.lock(false)
@@ -140,8 +140,8 @@ export class SysManager {
     this.btnResetListener()
   }
 
-  restart(): void {
-    this.writeData()
+  restart(langScript?: ModScriptLanguage, langStyle?: ModStyleLanguage): void {
+    this.writeData(langScript, langStyle)
   }
 
   init(): this {

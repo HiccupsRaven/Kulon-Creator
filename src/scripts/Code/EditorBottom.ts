@@ -1,6 +1,10 @@
 import { idb } from "../lib/idb"
 import { futor, kel } from "../lib/kel"
+import modal from "../lib/modal"
+import { CodeBuild } from "./Bottom/CodeBuild"
+import { CodeErrors } from "./data/CodeErrors"
 import { db } from "./data/db"
+import { modLangExtensions } from "./data/EditorModel"
 import { Editor } from "./Editor"
 import { ModLanguage } from "./types/CodeTypes"
 
@@ -26,12 +30,16 @@ export class EditorBottom {
 
   editor: Editor
 
+  private codeBuild: CodeBuild
+
   private ePosition!: HTMLSpanElement
   private eSelection!: HTMLSpanElement
   private eLanguage!: HTMLSpanElement
 
   constructor(config: IEditorBottomConfig) {
     this.editor = config.editor
+
+    this.codeBuild = new CodeBuild()
 
     this.createElement()
   }
@@ -60,6 +68,46 @@ export class EditorBottom {
 
   private writeData(): void {}
 
+  private btnCompileListener(): void {
+    const btnCompile = futor(".code-compile", this.el)
+
+    btnCompile.onclick = async () => {
+      if (this.editor.locked) return
+      this.lock()
+
+      const dirtySize = this.editor.middle.tabs?.dirtySize || 0
+
+      if (dirtySize >= 1) {
+        await modal.alert(`Error: ${dirtySize} unsaved file`)
+        this.lock(false)
+        return
+      }
+
+      const errorMarkers = this.editor.middle.textEditor?.errorList || []
+
+      if (errorMarkers.length >= 1) {
+        await new Promise((resolve) => new CodeErrors(errorMarkers, resolve))
+        this.lock(false)
+        return
+      }
+
+      const scriptString = db.script
+      const styleString = db.style
+
+      const scriptLoader = modLangExtensions[db.modLanguage.script]
+      const styleLoader = modLangExtensions[db.modLanguage.style]
+
+      await this.codeBuild.buildCode({
+        script: scriptString,
+        style: styleString,
+        scriptLoader,
+        styleLoader
+      })
+
+      this.lock(false)
+    }
+  }
+
   updateLanguage(modLang: ModLanguage): void {
     this.eLanguage.innerHTML = langNames[modLang]
   }
@@ -87,6 +135,7 @@ export class EditorBottom {
 
   init(): this {
     this.writeData()
+    this.btnCompileListener()
     return this
   }
 }

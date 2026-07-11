@@ -40,7 +40,7 @@ export class Tabs {
     this.list.push(
       new TabButton({
         tabs: this,
-        name: "CustomScript",
+        name: "customScript",
         ext: modLangExtensions[scriptType],
         ic: `brands fa-${langIcons[scriptType]}`
       })
@@ -49,7 +49,7 @@ export class Tabs {
     this.list.push(
       new TabButton({
         tabs: this,
-        name: "CustomStyle",
+        name: "customStyle",
         ext: modLangExtensions[styleType],
         ic: `brands fa-${langIcons[styleType]}`
       })
@@ -99,6 +99,10 @@ export class Tabs {
   setDirty(tabName: string, status: boolean = true): void {
     const tab = this.list.find((itm) => itm.name === tabName)
     if (tab) tab.updateStatus(status)
+  }
+
+  get dirtySize(): number {
+    return this.list.filter((itm) => itm.isDirty).length
   }
 
   get html(): HTMLDivElement {

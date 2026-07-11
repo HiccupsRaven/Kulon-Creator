@@ -1,5 +1,3 @@
-/*IMPORTSTYLE*/
-
 export class CustomGame {
   constructor(config) {
     this.id = "custom-game"

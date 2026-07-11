@@ -67,6 +67,28 @@
         .inp {
           width: 100%;
         }
+        .validate-ol {
+          width: 100%;
+          ul,
+          ol {
+            width: 100%;
+            list-style: none;
+            font-size: 14px;
+            li {
+              background-color: v.$px25;
+              font-family: "JetBrains Mono", "MonoLisa", monospace, monospace;
+              text-align: left;
+              line-height: 1.8;
+              padding: v.$mediumPadding;
+              margin-bottom: v.$mediumPadding;
+              border: 1px solid v.$px3;
+              border-radius: 5px;
+              &:last-child {
+                margin-bottom: 0;
+              }
+            }
+          }
+        }
       }
       .s {
         .btn {
