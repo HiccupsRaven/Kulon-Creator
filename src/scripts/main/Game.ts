@@ -142,7 +142,13 @@ export class Game {
       cloudItem.push(k)
     })
 
-    if (db.pmx && db.pmx.setGame) db.pmx.setGame(this)
+    console.log(db.pmx)
+    console.log(db.pmx?.id)
+
+    if (db.pmx && db.pmx.setGame) {
+      console.log(1, true)
+      db.pmx.setGame(this)
+    }
 
     this.kulonUI.init()
     this.keypressAction()
@@ -150,6 +156,11 @@ export class Game {
     db.onduty = 2
 
     await this.startCutscene(work.startend.start || [])
+
+    if (db.pmx && db.pmx.init) {
+      console.log(2, true)
+      db.pmx.init(Date.now())
+    }
 
     // backsong.switch(1)
     // backsong.start(750)

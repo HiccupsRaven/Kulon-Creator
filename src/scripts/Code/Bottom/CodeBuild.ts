@@ -1,8 +1,10 @@
 import * as esbuild from "esbuild-wasm"
-import * as sass from "sass"
+import * as sassModule from "sass"
 import { CodeErrors } from "../data/CodeErrors"
 import { db } from "../data/db"
 import { idb } from "../../lib/idb"
+
+const sass = sassModule
 
 type Resolve = (val?: void) => void
 
@@ -61,7 +63,6 @@ export class CodeBuild {
     const styleString = this.styleResult!.code!
 
     await idb.saveCompiled(db.id, scriptString, styleString)
-    console.log("saved")
   }
 
   private getDoneBundling(resolve: Resolve): void {

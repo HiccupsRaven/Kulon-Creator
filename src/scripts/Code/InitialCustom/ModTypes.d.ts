@@ -246,6 +246,40 @@ declare interface KulonJob {
   getItem(item: string): IKulonJobItem | undefined
 }
 
+interface KulonStateManager {
+  add(state: string, value: boolean | string): void
+  remove(state: string): void
+}
+
+interface KulonDate {
+  sameday(t1: number | Date, t2: number | Date): boolean
+
+  time(tsInp?: number, useSeconds?: boolean): string
+
+  date(ts?: number): string
+
+  parseTime(ts?: number): string
+
+  dateOrTime(ts?: number): string
+
+  remain(expiryTime: number, isFull?: boolean): string | null
+
+  datetime(ts?: number, delimiter?: string): string
+
+  timeago(ts: number, islong?: boolean): string
+
+  durrTime(ms: number, isFull?: boolean): string
+
+  durrNumber(ms: number): string
+}
+
+declare interface IKulonModLib {
+  asset: KulonAsset
+  audio: KulonAudio
+  stateManager: KulonStateManager
+  sdate: KulonDate
+}
+
 declare interface KulonPeers {
   size(): number
 
@@ -270,14 +304,13 @@ declare interface IKulonModConfig {
   peers: KulonPeers
   socket: KulonSocket
   job: KulonJob
-  asset: KulonAsset
-  audio: KulonAudio
   me: string
 }
 
 declare interface KulonMod {
   readonly id: string
   config?: IKulonModConfig
+  lib?: IKulonModLib
   addClaim?(state: string, status: boolean | string): void
   onInteract?(x: number, y: number, isRemote?: boolean, data?: IAny): void
   destroy(): void | Promise<void>

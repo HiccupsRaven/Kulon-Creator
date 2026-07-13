@@ -12,13 +12,13 @@ export class CustomGame implements KulonMod {
 
   me: string
 
-  constructor(config: IKulonModConfig) {
+  constructor(config: IKulonModConfig, lib: IKulonModLib) {
     this.job = config.job
     this.socket = config.socket
     this.peers = config.peers
 
-    this.asset = config.asset
-    this.audio = config.audio
+    this.asset = lib.asset
+    this.audio = lib.audio
 
     this.me = config.me
   }
