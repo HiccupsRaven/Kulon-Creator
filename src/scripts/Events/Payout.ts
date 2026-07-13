@@ -230,7 +230,6 @@ export default class Payout implements IPMC {
     this.writePayouts()
     if (db.pmx) {
       db.pmx.destroy()
-      db.pmx = undefined
     }
   }
 }

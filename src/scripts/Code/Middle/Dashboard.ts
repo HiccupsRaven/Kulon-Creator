@@ -160,7 +160,7 @@ export class Dashboard {
 
     this.middle.startTextEditor()
 
-    this.middle.editor.bottom.checkCompiled(ugm.modified)
+    this.middle.editor.bottom.checkCompiled(ugm.modLanguage?.lastSaved || ugm.modified)
   }
 
   private checkEmtpy(ugmList: UGMTree[], card?: HTMLDivElement): void {
@@ -168,7 +168,7 @@ export class Dashboard {
 
     if (ugmList.length < 1) {
       this.field.append(cardLoading)
-      cardLoading.innerHTML = '<i class="fa-regular fa-face-kiss-wink-heart fa-2x"></i> <br /><span>You might want to <a href="/index.html">Create New Project</a> first?</span>'
+      cardLoading.innerHTML = '<i class="fa-regular fa-face-kiss-wink-heart fa-2x"></i> <br /><span>You might want to <a href="/creator.html">Create New Project</a> first?</span>'
       return
     }
 

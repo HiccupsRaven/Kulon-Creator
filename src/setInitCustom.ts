@@ -16,7 +16,7 @@ function parseFile(str: string): string {
   return str.replace(/ {2}/g, "\t")
 }
 
-function setInitCustom(): void {
+export function setInitCustom(): void {
   const dtypesFile = fs.readFileSync(`${url}/ModTypes.d.ts`, "utf-8")
   const tsFile = fs.readFileSync(`${url}/CustomScript.ts`, "utf-8")
   const jsFile = fs.readFileSync(`${url}/CustomScript.js`, "utf-8")
@@ -29,7 +29,5 @@ function setInitCustom(): void {
   customMod.scss = parseFile(scssFile)
   customMod.css = parseFile(cssFile)
 
-  fs.writeFileSync("./src/scripts/Code/InitialCustom.json", JSON.stringify(customMod, null, 2), "utf-8")
+  fs.writeFileSync("./src/scripts/Code/InitialCustom.json", JSON.stringify(customMod), "utf-8")
 }
-
-setInitCustom()

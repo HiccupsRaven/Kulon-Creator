@@ -2,15 +2,13 @@ import { kel } from "../lib/kel"
 
 const OBJECTS_URL: string[] = []
 
-let MOD_SCRIPT: string = "default value"
+let MOD_SCRIPT: string | undefined = undefined
 
 export function setModScript(scriptString: string): void {
   MOD_SCRIPT = scriptString
 }
 
-export async function loadModScript() {
-  const sourceCode = MOD_SCRIPT
-
+export async function loadModScript(sourceCode: string): Promise<IAny> {
   const blob = new Blob([sourceCode], { type: "text/javascript" })
 
   const url = URL.createObjectURL(blob)
@@ -18,6 +16,10 @@ export async function loadModScript() {
   const module = await import(/* webpackIgnore: true */ url)
 
   return module
+}
+
+export function getModScript(): string | undefined {
+  return MOD_SCRIPT
 }
 
 export function loadModStyle(styleString: string): void {

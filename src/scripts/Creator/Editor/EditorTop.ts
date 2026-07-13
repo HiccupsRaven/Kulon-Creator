@@ -1,3 +1,4 @@
+import versions from "../../APIs/version.json"
 import { futor, kel, qutor } from "../../lib/kel"
 import modal from "../../lib/modal"
 import { Dashboard } from "../Dashboard"
@@ -21,7 +22,7 @@ export class EditorTop {
     this.el.innerHTML = `
     <div class="left">
       <img src="/images/logo.svg" alt="Devanka 761 Logo" title="Devanka HiccupsRaven Logo" width="20" />
-      <p>Kulon Game Creator</p>
+      <p>Kulon Creator v${versions.package}</p>
     </div>
     <div class="right">
       <div class="right-tile">

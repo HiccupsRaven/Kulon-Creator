@@ -22,6 +22,7 @@ import asset from "../data/assets"
 import audio from "../lib/AudioHandler"
 import { StateManager } from "../lib/stateManager"
 import sdate from "../lib/sdate"
+import { getModScript, loadModScript } from "../manager/modLoader"
 
 export interface GameObjectMain {
   update: (deltaTime: number, keys: InputHandler["keys"], walls: GameMap["walls"], game: Game) => void
@@ -153,9 +154,12 @@ export class Game {
       cloudItem.push(k)
     })
 
-    if (db.pmx) {
-      const customGame = db.pmx as IAny
-      db.pmx = new customGame(
+    const modScript = getModScript()
+
+    if (modScript) {
+      const { CustomGame } = await loadModScript(modScript)
+
+      db.pmx = new CustomGame(
         {
           job: db.job,
           me: db.me.id,

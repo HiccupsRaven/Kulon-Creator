@@ -7,7 +7,7 @@ import LoadAssets from "../lib/LoadAssets"
 import { IMapList } from "../types/MapsTypes"
 import chat from "./Chat"
 import { setOfflineAssets, setOfflineMaps } from "./initialWorld"
-import { loadModScript, loadModStyle, setModScript } from "./modLoader"
+import { loadModStyle, setModScript } from "./modLoader"
 import setNewGame from "./setNewGame"
 import { work } from "./WorkWorld"
 
@@ -48,9 +48,5 @@ export async function setTestWorld(data: UGCProject): Promise<void> {
   if (data.mods && data.mods.script && data.mods.style) {
     setModScript(data.mods.script)
     loadModStyle(data.mods.style)
-
-    const { CustomGame } = await loadModScript()
-
-    db.pmx = CustomGame
   }
 }

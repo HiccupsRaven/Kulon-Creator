@@ -263,9 +263,9 @@ export class GameSettings {
                   <div class="i">
                     <br /><br />
                     <div class="tx center"><b>Custom Scripts</b></div>
-                    <div class="tx center">Open Kulon Custom Game Code, navigate to <span class="mono">root:/kulon/usr/${toText(db.settings.project)}</span>, then write your code!</div>
+                    <div class="tx center">Open Kulon Code Editor, navigate to <span class="mono">root:/kulon/usr/${toText(db.settings.project)}</span>, then write your code!</div>
                     <br />
-                    <div class="btn btn-find find-scripts">Open Custom Code Panel</div>
+                    <div class="btn btn-find find-scripts">Open Code Editor Panel</div>
                     <br /><br />
                   </div>
                 </div>

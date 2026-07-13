@@ -1,3 +1,4 @@
+import versions from "../APIs/version.json"
 import { toText } from "../Creator/lib/gen"
 import { futor, kel } from "../lib/kel"
 import modal from "../lib/modal"
@@ -25,7 +26,7 @@ export class EditorTop {
     this.el.innerHTML = `
     <div class="kulon-code-top-left">
       <img src="/images/logo.svg" alt="Devanka 761 Logo" title="Devanka HiccupsRaven Logo" width="20" />
-      <p>Kulon Custom Game Code</p>
+      <p>Kulon Code Editor v${versions.package}</p>
     </div>
     <div class="kulon-code-top-mid"><div class="top-mid-path">root:/kulon/usr/$_find/$_x${Date.now().toString(36)}/~#</div></div>
     <div class="kulon-code-top-right">
@@ -51,7 +52,7 @@ export class EditorTop {
       if (window.opener) {
         window.close()
       } else {
-        window.location.href = "/index.html"
+        window.location.href = "/creator.html"
       }
     }
   }

@@ -260,6 +260,14 @@ export class Virtualdb {
 
     await vfs.saveFile(projectId, modsPath, "Style", "style", ugm.style || "")
 
+    const modlangFile: IModLanguage = await vfs.readFile(projectId, modsPath, "modlang.json")
+
+    const modlangRef: IModLanguage = modlangFile
+
+    modlangRef.lastSaved = Date.now()
+
+    await vfs.saveFile(projectId, modsPath, "modlang.json", "json", modlangRef)
+
     const metaFile = await vfs.readFile(projectId, sysPath, "meta.json")
 
     const metaRef: UGCMeta = metaFile

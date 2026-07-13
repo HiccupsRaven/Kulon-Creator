@@ -156,6 +156,7 @@ export class EditorModel {
     const metaTime = Date.now()
 
     db.modified = metaTime
+    db.modLanguage.lastSaved = metaTime
 
     this.baseEditor?.bottom.uploadSave()
 

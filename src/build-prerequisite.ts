@@ -1,4 +1,14 @@
 import fs from "fs"
+import { setInitCustom } from "./setInitCustom"
+
+function copyVersion(): void {
+  const packageString = fs.readFileSync("./package.json", "utf-8")
+  const packageObject = JSON.parse(packageString)
+
+  const versionObject = { package: packageObject.version }
+
+  fs.writeFileSync("./src/scripts/APIs/version.json", JSON.stringify(versionObject), "utf-8")
+}
 
 async function copyWasm(): Promise<void> {
   const wasmFile = "./node_modules/esbuild-wasm/esbuild.wasm"
@@ -14,4 +24,9 @@ async function copyWasm(): Promise<void> {
   fs.cpSync(wasmFile, `${bruhPath}/esbuild.wasm`)
 }
 
-copyWasm()
+async function startCopy() {
+  copyVersion()
+  await copyWasm()
+  setInitCustom()
+}
+startCopy()

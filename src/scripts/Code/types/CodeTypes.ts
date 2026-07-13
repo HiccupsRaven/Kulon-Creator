@@ -6,6 +6,7 @@ export interface IModLanguage {
   script: ModScriptLanguage
   style: ModStyleLanguage
   lastCompiled?: number
+  lastSaved?: number
 }
 
 export interface UGMTree {
