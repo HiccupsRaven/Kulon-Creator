@@ -25,10 +25,10 @@ export function setInitDB(ugm: UGMTree, modValues: UGMRefExtended): void {
   db.modified = Number(ugm.modified)
   db.project = ugm.project.toString()
 
-  setEdiorDB(ugm.modLanguage!, modValues)
+  setEditorDB(ugm.modLanguage!, modValues)
 }
 
-export function setEdiorDB(modLang: IModLanguage, modValues: UGMRefExtended): void {
+export function setEditorDB(modLang: IModLanguage, modValues: UGMRefExtended): void {
   db.modLanguage = toObject(modLang)
 
   const script = modValues.script?.toString() || ""

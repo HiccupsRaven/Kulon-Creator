@@ -49,12 +49,6 @@ export class SysManager {
           </label>
         </div>
         <div class="radio">
-          <label for="style-lang-less">
-            <input type="radio" name="style-lang" id="style-lang-less" value="less" />
-            <span><i class="fa-brands fa-less fa-fw"></i> Less</span>
-          </label>
-        </div>
-        <div class="radio">
           <label for="style-lang-css">
             <input type="radio" name="style-lang" id="style-lang-css" value="css" />
             <span><i class="fa-brands fa-css3 fa-fw"></i> CSS</span>

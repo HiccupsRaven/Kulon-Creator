@@ -19,7 +19,6 @@ const langNames: ILangNames = {
   javascript: "JavaScript",
   scss: "SCSS",
   css: "CSS",
-  less: "Less",
   json: "JSON"
 }
 
@@ -52,10 +51,8 @@ export class EditorBottom {
       <div class="code-pos"><span class="code-pos-val"></span> <span class="code-sel-val"></span></div>
     </div>
     <div class="kulon-code-bottom-right">
-      <div class="btn code-compile">
-        <div class="code-text"><i class="fa-solid fa-check"></i></div>
-        <div class="code-text">Compile:</div>
-        <div class="code-file">CustomGame.ts</div>
+      <div class="btn code-compile" title="Compile Mod: No Project">
+        <div class="code-text">No Project <i class="fa-solid fa-dot fa-fw"></i></div>
       </div>
     </div>`
 
@@ -73,6 +70,8 @@ export class EditorBottom {
 
     btnCompile.onclick = async () => {
       if (this.editor.locked) return
+      if ((db.modLanguage.lastCompiled || 0) >= db.modified) return
+      if (this.editor.middle.textEditor?.isSwitchLocked) return
       this.lock()
 
       const dirtySize = this.editor.middle.tabs?.dirtySize || 0
@@ -91,6 +90,9 @@ export class EditorBottom {
         return
       }
 
+      btnCompile.innerHTML = `<div class="code-text">Compiling</div><div class="code-text"><i class="fa-solid fa-circle-notch fa-spin fa-fw"></i></div>`
+      btnCompile.title = "Compiling Mod"
+
       const scriptString = db.script
       const styleString = db.style
 
@@ -103,6 +105,8 @@ export class EditorBottom {
         scriptLoader,
         styleLoader
       })
+
+      this.checkCompiled(db.modified)
 
       this.lock(false)
     }
@@ -125,6 +129,19 @@ export class EditorBottom {
 
     await idb.saveMod(db.id, { script: db.script, style: db.style }, modLang)
   }
+
+  checkCompiled(ts: number): void {
+    const btnCompile = futor(".code-compile", this.el)
+
+    if ((db.modLanguage.lastCompiled || 0) >= ts) {
+      btnCompile.title = "Mod Compiled"
+      btnCompile.innerHTML = `<div class="code-text"><i class="fa-solid fa-check"></i></div>`
+    } else {
+      btnCompile.title = "Compile Project's Mod"
+      btnCompile.innerHTML = `<div class="code-text">Compile Mod</div><div class="code-text"><i class="fa-solid fa-dot"></i></div>`
+    }
+  }
+
   lock(status: boolean = true): void {
     this.locked = status
   }

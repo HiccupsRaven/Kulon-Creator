@@ -1,10 +1,11 @@
 export type ModScriptLanguage = "typescript" | "javascript"
-export type ModStyleLanguage = "scss" | "less" | "css"
+export type ModStyleLanguage = "scss" | "css"
 export type ModLanguage = ModScriptLanguage | ModStyleLanguage | "json"
 
 export interface IModLanguage {
   script: ModScriptLanguage
   style: ModStyleLanguage
+  lastCompiled?: number
 }
 
 export interface UGMTree {

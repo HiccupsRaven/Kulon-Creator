@@ -159,6 +159,8 @@ export class Dashboard {
     this.middle.endDashboard()
 
     this.middle.startTextEditor()
+
+    this.middle.editor.bottom.checkCompiled(ugm.modified)
   }
 
   private checkEmtpy(ugmList: UGMTree[], card?: HTMLDivElement): void {

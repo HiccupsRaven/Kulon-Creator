@@ -29,7 +29,6 @@ export const modLangExtensions: Record<ModLanguage, string> = {
   typescript: "ts",
   javascript: "js",
   scss: "scss",
-  less: "less",
   css: "css",
   json: "json"
 }
@@ -50,7 +49,6 @@ export const langIcons: LangIcon = {
   typescript: "typescript",
   javascript: "js",
   scss: "sass",
-  less: "less",
   css: "css3",
   json: "brackets-curly"
 }
@@ -155,7 +153,13 @@ export class EditorModel {
       db.modLanguage.style = model.getLanguageId() as ModStyleLanguage
     }
 
+    const metaTime = Date.now()
+
+    db.modified = metaTime
+
     this.baseEditor?.bottom.uploadSave()
+
+    this.baseEditor?.bottom.checkCompiled(metaTime)
   }
 
   startExternalLib(): void {
@@ -228,7 +232,7 @@ export class EditorModel {
 
             const fullFileName = path.startsWith("/") ? path.substring(1) : path
 
-            const isStyle = fullFileName.endsWith(".css") || fullFileName.endsWith(".scss") || fullFileName.endsWith(".less")
+            const isStyle = fullFileName.endsWith(".css") || fullFileName.endsWith(".scss")
 
             let insertText = fullFileName
             if (!isStyle) {

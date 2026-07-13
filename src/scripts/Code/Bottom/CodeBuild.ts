@@ -1,5 +1,8 @@
 import * as esbuild from "esbuild-wasm"
+import * as sass from "sass"
 import { CodeErrors } from "../data/CodeErrors"
+import { db } from "../data/db"
+import { idb } from "../../lib/idb"
 
 type Resolve = (val?: void) => void
 
@@ -44,9 +47,21 @@ export class CodeBuild {
       return
     }
 
+    db.modLanguage.lastCompiled = Date.now()
+
     this.isBundling = false
 
+    await this.saveCompiled()
+
     resolve()
+  }
+
+  private async saveCompiled(): Promise<void> {
+    const scriptString = this.scriptResult!.code!
+    const styleString = this.styleResult!.code!
+
+    await idb.saveCompiled(db.id, scriptString, styleString)
+    console.log("saved")
   }
 
   private getDoneBundling(resolve: Resolve): void {
@@ -82,17 +97,26 @@ export class CodeBuild {
       })
 
       this.scriptResult = { ...result, lang: fileLoader }
-
-      this.getDoneBundling(resolve)
     } catch (e) {
       const err = String(e)
       this.scriptResult = { errors: err, lang: fileLoader }
+    } finally {
       this.getDoneBundling(resolve)
     }
   }
 
-  async buildStyle(_fileString: string, _fileLoader: string, resolve: Resolve): Promise<void> {
-    this.getDoneBundling(resolve)
+  async buildStyle(fileString: string, fileLoader: string, resolve: Resolve): Promise<void> {
+    try {
+      const sassCompiled = await sass.compileStringAsync(fileString, { style: "compressed" })
+      const result = sassCompiled.css.toString()
+
+      this.styleResult = { code: result, lang: fileLoader }
+    } catch (e) {
+      const err = String(e)
+      this.styleResult = { errors: err, lang: fileLoader }
+    } finally {
+      this.getDoneBundling(resolve)
+    }
   }
 
   private async initialize(): Promise<void> {

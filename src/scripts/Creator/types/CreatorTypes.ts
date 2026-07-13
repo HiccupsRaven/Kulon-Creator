@@ -215,6 +215,11 @@ export interface IGameSettings {
   reqs?: string[]
 }
 
+export interface IUGCMods {
+  script?: string
+  style?: string
+}
+
 export interface UGCRef {
   maps: IMapList
   assets: IAsset[]
@@ -222,6 +227,10 @@ export interface UGCRef {
   meta: UGCMeta
   items: ICloudItem[]
   settings: IGameSettings
+}
+
+export interface UGCProject extends UGCRef {
+  mods?: IUGCMods
 }
 
 export type UGCData = Record<string, UGCRef>

@@ -1,5 +1,5 @@
 import { IAsset, IAssets } from "../types/LibTypes"
-import { UGCData, UGCMeta, UGCRef } from "../Creator/types/CreatorTypes"
+import { UGCData, UGCMeta, UGCProject, UGCRef } from "../Creator/types/CreatorTypes"
 import { FileDataType, IFileRep, IFileRes, IReplaceFile, ISendFile } from "../types/IndexedDbTypes"
 import { astPath, modsPath, sysPath } from "./dbVar"
 import { genStringId, rStr, sanitizeName } from "../Creator/lib/gen"
@@ -63,8 +63,8 @@ export class Virtualdb {
 
     return ugcParsed
   }
-  async getProject(projectId: string): Promise<UGCRef | null> {
-    const ref: Partial<UGCRef> = {}
+  async getProject(projectId: string): Promise<UGCProject | null> {
+    const ref: Partial<UGCProject> = {}
 
     const metaFile = await vfs.readFile(projectId, sysPath, "meta.json")
     const assetsFile = await vfs.readFile(projectId, sysPath, "assets.json")
@@ -81,6 +81,12 @@ export class Virtualdb {
     ref.maps = mapsFile
     ref.items = itemsFile
     ref.settings = settingsFile
+    // ref.mods
+
+    const script = await vfs.readFile(projectId, modsPath, "customScript")
+    const style = await vfs.readFile(projectId, modsPath, "customStyle")
+
+    if (script && style) ref.mods = { script, style }
 
     const ugcParsed = ref as UGCRef
 
@@ -261,6 +267,19 @@ export class Virtualdb {
     metaRef.modified = Date.now()
 
     await vfs.saveFile(projectId, sysPath, "meta.json", "json", metaRef)
+  }
+  async saveCompiled(projectId: string, script: string, style: string): Promise<void> {
+    await vfs.saveFile(projectId, modsPath, "customScript", "script", script)
+
+    await vfs.saveFile(projectId, modsPath, "customStyle", "style", style)
+
+    const modlangFile: IModLanguage = await vfs.readFile(projectId, modsPath, "modlang.json")
+
+    const modlangRef: IModLanguage = modlangFile
+
+    modlangRef.lastCompiled = Date.now()
+
+    await vfs.saveFile(projectId, modsPath, "modlang.json", "json", modlangRef)
   }
 }
 

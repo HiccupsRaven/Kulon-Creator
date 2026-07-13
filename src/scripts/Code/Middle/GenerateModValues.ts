@@ -29,7 +29,6 @@ export class GenerateModValues {
     const tsChecked = sc === "typescript" ? " checked" : ""
     const jsChecked = sc === "javascript" ? " checked" : ""
     const scssChecked = st === "scss" ? " checked" : ""
-    const lessChecked = st === "less" ? " checked" : ""
     const cssChecked = st === "css" ? " checked" : ""
 
     this.el = iform(`
@@ -79,14 +78,6 @@ export class GenerateModValues {
                   <label for="formgen-style-lang-scss">
                     <input type="radio" name="formgen-style-lang" id="formgen-style-lang-scss" value="scss"${scssChecked} />
                     <span><i class="fa-brands fa-sass fa-fw"></i> SCSS <i class="fa-solid fa-thumbs-up"></i></span>
-                  </label>
-                </div>
-              </div>
-              <div class="i">
-                <div class="radio">
-                  <label for="formgen-style-lang-less">
-                    <input type="radio" name="formgen-style-lang" id="formgen-style-lang-less" value="less"${lessChecked} />
-                    <span><i class="fa-brands fa-less fa-fw"></i> Less</span>
                   </label>
                 </div>
               </div>
