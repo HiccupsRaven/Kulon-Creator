@@ -53,10 +53,6 @@ export interface IPMX {
   init(...args: IAny): void
 }
 
-export interface IPMRaw {
-  CustomGame: IPMX
-}
-
 export interface IProvider {
   id?: string
   lunaId?: string

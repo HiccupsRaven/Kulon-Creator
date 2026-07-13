@@ -18,6 +18,10 @@ import socket from "../lib/OSocket"
 import { work } from "../manager/WorkWorld"
 import socketHandler from "../lib/OSocketHandler"
 import cloudItem from "../data/cloudItems"
+import asset from "../data/assets"
+import audio from "../lib/AudioHandler"
+import { StateManager } from "../lib/stateManager"
+import sdate from "../lib/sdate"
 
 export interface GameObjectMain {
   update: (deltaTime: number, keys: InputHandler["keys"], walls: GameMap["walls"], game: Game) => void
@@ -130,7 +134,14 @@ export class Game {
       invite: 1234,
       itemId: "69",
       mission: work.settings.project!,
-      players: [],
+      players: [
+        {
+          done: true,
+          id: db.me.id,
+          ready: true,
+          ts: Date.now()
+        }
+      ],
       states: {},
       status: 2,
       users: [db.me]
@@ -142,13 +153,24 @@ export class Game {
       cloudItem.push(k)
     })
 
-    console.log(db.pmx)
-    console.log(db.pmx?.id)
-
-    if (db.pmx && db.pmx.setGame) {
-      console.log(1, true)
-      db.pmx.setGame(this)
+    if (db.pmx) {
+      const customGame = db.pmx as IAny
+      db.pmx = new customGame(
+        {
+          job: db.job,
+          me: db.me.id,
+          socket: { send() {} }
+        },
+        {
+          asset: asset,
+          audio: audio,
+          stateManager: StateManager,
+          sdate
+        }
+      )
     }
+
+    if (db.pmx && db.pmx.setGame) db.pmx.setGame(this)
 
     this.kulonUI.init()
     this.keypressAction()
@@ -157,10 +179,7 @@ export class Game {
 
     await this.startCutscene(work.startend.start || [])
 
-    if (db.pmx && db.pmx.init) {
-      console.log(2, true)
-      db.pmx.init(Date.now())
-    }
+    if (db.pmx && db.pmx.init) db.pmx.init(Date.now())
 
     // backsong.switch(1)
     // backsong.start(750)

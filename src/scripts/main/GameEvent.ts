@@ -163,7 +163,10 @@ export class GameEvent {
     const { states } = this.event
     if (!states) return resolve()
 
-    states.forEach((state) => (SaveList[state] = true))
+    states.forEach((state) => {
+      SaveList[state] = true
+      if (db.pmx) db.pmx.addClaim(state, db.me.id)
+    })
 
     checkHint(states)
 

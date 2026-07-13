@@ -49,8 +49,8 @@ export async function setTestWorld(data: UGCProject): Promise<void> {
     setModScript(data.mods.script)
     loadModStyle(data.mods.style)
 
-    const modGame = await loadModScript()
+    const { CustomGame } = await loadModScript()
 
-    db.pmx = modGame.CustomGame
+    db.pmx = CustomGame
   }
 }

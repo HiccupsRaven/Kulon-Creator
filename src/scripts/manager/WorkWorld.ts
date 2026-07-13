@@ -22,7 +22,7 @@ export const work: UGCRef = {
 export function checkMissionEnd(): void {
   const reqs = work.settings.reqs!
 
-  const isFinished = reqs.every((state) => SaveList[state] === true)
+  const isFinished = reqs.every((state) => !!SaveList[state])
 
   if (isFinished) socketHandler.payout()
 }
