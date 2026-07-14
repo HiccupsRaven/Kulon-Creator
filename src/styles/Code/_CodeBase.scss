@@ -40,14 +40,17 @@ textarea {
 
 button,
 .btn,
-[role="button"],
-button:hover,
-.btn:hover,
-[role="button"]:hover {
+[role="button"] {
   border: none;
   outline: none;
   cursor: pointer;
 }
+
+a,
+a:visited {
+  color: v.$pm1;
+}
+
 input {
   color: v.$white;
 }
