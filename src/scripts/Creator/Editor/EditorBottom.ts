@@ -6,6 +6,7 @@ import { Editor } from "../Editor"
 import { validateProject } from "../lib/ValidateProject"
 import { doTell } from "../lib/tell"
 import { idb } from "../../lib/idb"
+import modal from "../../lib/modal"
 
 interface EditorBottomConfig {
   editor: Editor
@@ -123,6 +124,16 @@ export class EditorBottom {
     }
   }
 
+  private publishListener(): void {
+    const btnPublish = futor(".right .btn-publish", this.el)
+    btnPublish.onclick = async () => {
+      if (this.editor.locked) return
+      this.locked = true
+      await modal.alert({ msg: "This feature is under development", ic: "helmet-safety" })
+      this.locked = false
+    }
+  }
+
   private savedStyler(btnSave: HTMLDivElement): void {
     if (savedTimeout) {
       clearTimeout(savedTimeout)
@@ -152,6 +163,7 @@ export class EditorBottom {
     this.centerizeListener()
     this.saveListener()
     this.testListener()
+    this.publishListener()
     return this
   }
 }
