@@ -1,6 +1,6 @@
 {
   "name": "kulon-creator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "scripts": {
     "serve": "http-server ./public -p 9001 -d false -o index.html -c-1 --silent",
