@@ -9,6 +9,9 @@ const creatorSection = document.getElementById("creator") as HTMLDivElement
 const btnContinue = document.querySelector(".btn-continue") as HTMLAnchorElement
 const btnInstall = document.querySelector(".btn-install") as HTMLAnchorElement
 
+const btnMenu = document.querySelector(".btn-menu") as HTMLDivElement
+const nav = document.querySelector(".nav") as HTMLElement
+
 function paralaxLookALike(): void {
   const scrollHeight = window.scrollY
   const paralaxTop = paralax.offsetTop
@@ -93,7 +96,24 @@ function setPWA(): void {
   })
 }
 
+let isMenuOpen: boolean = false
+
+function setMenu(): void {
+  btnMenu.onclick = () => {
+    isMenuOpen = !isMenuOpen
+
+    if (isMenuOpen) {
+      nav.classList.add("opened")
+      btnMenu.innerHTML = `<i class="fa-pixel fa-regular fa-xmark fa-fw"></i>`
+      return
+    }
+    nav.classList.remove("opened")
+    btnMenu.innerHTML = `<i class="fa-pixel fa-regular fa-bars fa-fw"></i>`
+  }
+}
+
 window.addEventListener("DOMContentLoaded", () => {
+  setMenu()
   setParalax()
   overWriteBtnScroll()
   setPWA()

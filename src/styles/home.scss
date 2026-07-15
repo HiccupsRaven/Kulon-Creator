@@ -1,4 +1,5 @@
 @use "./variables" as v;
+@use "./other/animations";
 
 $white: #dedede;
 $defaultSize: clamp(1rem, 10vw, 1.2rem);
@@ -78,25 +79,45 @@ img {
     justify-content: start;
     align-items: center;
     gap: $bigPadding;
-    .btn-icon {
+    .nav-title {
       display: flex;
       justify-content: start;
       align-items: center;
-      gap: $mediumPadding;
-      margin-right: $mediumPadding;
-      span {
-        font-weight: 900;
+      .btn-menu {
+        display: none;
+        font-size: calc($defaultSize * 0.9);
+        padding: $mediumPadding;
         color: $white;
-        font-size: calc($defaultSize * 1.1);
+        &:hover {
+          background-color: v.$pm2;
+        }
+      }
+      .btn-icon {
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        gap: $mediumPadding;
+        margin-right: $mediumPadding;
+        span {
+          font-weight: 900;
+          color: $white;
+          font-size: calc($defaultSize * 1.1);
+        }
       }
     }
-    .btn-nav {
-      text-decoration: none;
-      color: $white;
-      font-size: calc($defaultSize * 0.9);
-      &:hover {
-        color: v.$pm1;
-        text-decoration: underline;
+    .nav-items {
+      display: flex;
+      justify-content: start;
+      align-items: center;
+      gap: $bigPadding;
+      .btn-nav {
+        text-decoration: none;
+        color: $white;
+        font-size: calc($defaultSize * 0.9);
+        &:hover {
+          color: v.$pm1;
+          text-decoration: underline;
+        }
       }
     }
   }
@@ -329,6 +350,78 @@ img {
     line-height: 1.2;
     a {
       text-decoration: none;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .nav {
+    padding: 0;
+    .nav-left {
+      min-width: 0;
+      flex-direction: column;
+      justify-content: center;
+      align-items: start;
+      gap: 0;
+      .nav-title {
+        padding: $mediumPadding;
+        .btn-icon {
+          span::before {
+            content: "KULON ";
+          }
+        }
+        .btn-menu {
+          display: block;
+        }
+      }
+      .nav-items {
+        display: none;
+        width: 100%;
+        border-top: 1px solid v.$px3;
+        flex-direction: column;
+        justify-content: center;
+        align-items: start;
+        gap: $mediumPadding;
+        padding: $bigPadding;
+        background-color: v.$px2;
+        .btn-nav {
+          width: 100%;
+          padding: $mediumPadding;
+          &:hover {
+            text-decoration: none;
+            color: $white;
+            background-color: v.$pm2;
+          }
+        }
+      }
+    }
+    .nav-right {
+      padding: $mediumPadding;
+    }
+    &.opened {
+      height: 100%;
+      flex-direction: column;
+      justify-content: start;
+      gap: 0;
+      background-color: v.$px2;
+      border-bottom: none;
+      .nav-left {
+        width: 100%;
+        .nav-title {
+          width: 100%;
+          background-color: v.$px1;
+        }
+        .nav-items {
+          animation: slide_right_in 0.25s;
+          display: flex;
+        }
+      }
+      .nav-right {
+        padding: $bigPadding;
+        background-color: v.$px2;
+        width: 100%;
+        animation: slide_right_in 0.25s;
+      }
     }
   }
 }
