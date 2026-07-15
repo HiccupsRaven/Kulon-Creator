@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "resolveJsonModule": true,
+    "outDir": "dist",
+    "rootDir": "./src",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "removeComments": true,
+    "types": ["node"]
+  },
+  "include": ["src/"],
+  "exclude": ["node_modules/", "dist/", "public/", "vite.config.mjs", "src/public.entries.ts"]
+}

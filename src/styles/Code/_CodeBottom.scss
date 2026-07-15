@@ -1,0 +1,41 @@
+@use "../variables" as v;
+
+$btmColor: #676185;
+
+.kulon-code-bottom {
+  flex-shrink: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: v.$px25;
+  gap: v.$mediumPadding;
+  border-top: 1px solid v.$px3;
+  .kulon-code-bottom-left {
+    color: $btmColor;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: v.$mediumPadding;
+    padding: v.$smallPadding v.$mediumPadding;
+  }
+  .kulon-code-bottom-right {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: v.$mediumPadding;
+    .code-compile {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      color: $btmColor;
+      height: 100%;
+      padding: v.$smallPadding v.$mediumPadding;
+      &:hover {
+        color: v.$softwhite;
+        background-color: v.$pm2;
+      }
+    }
+  }
+}

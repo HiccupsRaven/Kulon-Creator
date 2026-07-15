@@ -1,0 +1,63 @@
+@use "../variables" as v;
+
+.kulon-code-top {
+  flex-shrink: 0;
+  width: 100%;
+  background-color: v.$pm2;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  .kulon-code-top-left {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding: v.$mediumPadding;
+    gap: v.$mediumPadding;
+    overflow: hidden;
+    p {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+  .kulon-code-top-mid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    .top-mid-path {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      span {
+        flex-shrink: 0;
+      }
+      .path-name {
+        flex-shrink: 1;
+        overflow: hidden;
+        font-family: monospace, monospace;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
+  .kulon-code-top-right {
+    height: 100%;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    .btn-close {
+      padding: calc(v.$mediumPadding * 1.4);
+      width: fit-content;
+      height: 100%;
+      color: v.$white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      &:hover {
+        background-color: v.$sred;
+      }
+    }
+  }
+}

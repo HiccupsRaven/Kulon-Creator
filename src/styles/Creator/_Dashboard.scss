@@ -1,0 +1,238 @@
+@use "../variables" as v;
+@use "../cursor" as c;
+
+html {
+  font-size: 12px;
+}
+
+::selection {
+  background-color: v.$pm1;
+  color: v.$px1;
+}
+
+::-moz-selection {
+  background-color: v.$pm1;
+  color: v.$px1;
+}
+.Dashboard {
+  background-color: v.$px1;
+  width: calc(100% - 40px);
+  max-width: 600px;
+  height: calc(100% - 40px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  animation: slide_up_in 0.3s forwards;
+  .Dashboard-Actions {
+    width: 100%;
+    height: 55px;
+    .btn {
+      border-radius: 10px;
+      width: 100%;
+      height: 100%;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      background-color: v.$px3;
+      &:hover {
+        color: v.$white;
+      }
+    }
+  }
+  .Dashboard-Content {
+    background-color: v.$px25;
+    width: 100%;
+    height: calc(100% - (55px + 20px));
+    border: 2px solid v.$px3;
+    border-radius: 10px;
+    overflow: hidden;
+    .Dashboard-About {
+      width: 100%;
+      height: 80px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      background-color: v.$px3;
+      padding: 10px;
+      .Dashboard-Meta {
+        flex-grow: 1;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        justify-content: center;
+        .Dashboard-Title {
+          font-size: 1.5em;
+          font-weight: 600;
+        }
+        .Dashboard-Desc {
+          font-size: 0.9em;
+          a {
+            text-decoration: none;
+            color: v.$yellow;
+          }
+        }
+      }
+      .Dashboard-Back {
+        .btn {
+          display: block;
+          padding: 10px;
+          border-radius: 10px;
+          background-color: v.$px1;
+          color: v.$yellow;
+          text-decoration: none;
+        }
+      }
+    }
+    .Dashboard-List {
+      width: 100%;
+      height: calc(100% - 80px);
+      padding: 10px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      .card {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+        &:last-child {
+          margin-bottom: 0;
+        }
+        .card-meta {
+          flex-grow: 1;
+          padding: 10px;
+          background-color: v.$black;
+          border: 1px solid v.$black;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 5px;
+          border-radius: 5px;
+          cursor: c.$cursorPointer;
+          .meta {
+            .meta-title {
+              font-weight: 600;
+              width: 100%;
+              word-break: break-all;
+              word-break: break-word;
+            }
+            .meta-sub {
+              width: 100%;
+              word-break: break-all;
+              word-break: break-word;
+              font-size: calc(v.$defaultSize * 0.9);
+              color: v.$swhite;
+            }
+          }
+          &:hover {
+            border-color: v.$pm1;
+            color: v.$pm1;
+          }
+          i {
+            font-size: 0.9em;
+          }
+        }
+        .card-actions {
+          display: flex;
+          justify-content: right;
+          align-items: center;
+          gap: 10px;
+          .btn-delete {
+            color: v.$cred;
+          }
+        }
+        &.card-loading {
+          color: v.$swhite;
+          padding: v.$bigPadding;
+          width: 100%;
+          display: block;
+          text-align: center;
+          gap: 10px;
+          margin-bottom: 10px;
+        }
+      }
+    }
+  }
+  &.out {
+    animation: slide_up_out 0.3s forwards;
+  }
+}
+
+.modal {
+  font-size: 18px;
+  .box {
+    max-width: 650px;
+    .ic {
+      font-size: 2.2em;
+    }
+    .inf {
+      font-size: 1em;
+      .mono {
+        padding: v.$mediumPadding;
+        background-color: v.$black;
+        color: v.$syellow;
+        text-align: left;
+        font-size: 0.9em;
+        line-height: 1.5;
+      }
+      ul,
+      ol {
+        display: block;
+        list-style-position: outside;
+        li {
+          margin-left: 2em;
+          word-break: break-all;
+          word-break: break-word;
+        }
+      }
+    }
+    .acts {
+      .btn-outer {
+        .btn {
+          font-size: 1em;
+          &.btn-ok {
+            font-weight: 600;
+          }
+        }
+      }
+    }
+  }
+}
+
+.windowed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 95;
+  background-color: rgba(v.$black, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: v.$bigPadding;
+  .content-files {
+    background-color: v.$px1;
+    width: clamp(300px, 80vw, 800px);
+    max-height: calc(100% - v.$bigPadding);
+    border: 2px solid v.$px3;
+    animation: slide_form_in 0.2s;
+  }
+  .event-chooser {
+    animation: slide_form_in 0.2s;
+  }
+  &.hide {
+    display: none;
+  }
+}
+
+.mono {
+  font-family: monospace, monospace;
+}

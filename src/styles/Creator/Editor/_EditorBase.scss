@@ -1,0 +1,11 @@
+.Editor {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  animation: slide_down_in 0.3s;
+  &.out {
+    animation: slide_down_out 0.3s forwards;
+  }
+}

@@ -1,0 +1,187 @@
+@use "../../variables" as v;
+
+.event-chooser {
+  width: clamp(300px, 80vw, 800px);
+  height: calc(100% - v.$bigPadding);
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  background-color: v.$px25;
+  border: 1px solid v.$px3;
+
+  .chooser-list {
+    width: 100%;
+    min-height: 0;
+    flex-grow: 1;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    .card-search {
+      width: 100%;
+      padding: v.$mediumPadding;
+      input {
+        display: block;
+        width: 100%;
+        padding: v.$mediumPadding;
+        background-color: v.$black;
+        border: 1px solid v.$px3;
+      }
+    }
+    .card {
+      padding: v.$mediumPadding;
+      display: flex;
+      justify-content: left;
+      align-items: center;
+      gap: v.$mediumPadding;
+      cursor: pointer;
+      .ic {
+        flex-shrink: 0;
+      }
+      .text {
+        flex-grow: 1;
+        .text-sub {
+          font-size: calc(v.$defaultSize * 0.9);
+          color: v.$swhite;
+        }
+      }
+      &.hide {
+        display: none;
+      }
+      &:hover {
+        background-color: v.$px2;
+      }
+      &.active {
+        background-color: v.$pm1;
+        color: v.$px1;
+        .text-name,
+        .text-sub {
+          color: v.$px1;
+        }
+      }
+    }
+    .card-empty {
+      text-align: center;
+      padding: v.$mediumPadding;
+      color: v.$syellow;
+    }
+  }
+
+  .chooser-title {
+    flex-shrink: 0;
+    width: 100%;
+    text-align: center;
+    background-color: v.$px2;
+    padding: v.$mediumPadding;
+    border-bottom: 1px solid v.$px3;
+  }
+
+  .chooser-actions {
+    flex-shrink: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .btn {
+      flex-grow: 1;
+      text-align: center;
+      padding: v.$mediumPadding;
+      background-color: v.$px1;
+      border-top: 1px solid v.$px3;
+      &.btn-new-item {
+        color: v.$syellow;
+        &:hover {
+          background-color: rgba(v.$syellow, 0.2);
+        }
+      }
+      &.btn-cancel:hover {
+        background-color: rgba(v.$pm2, 0.5);
+      }
+    }
+  }
+  &.map-chooser {
+    .list {
+      width: 100%;
+      display: flex;
+      flex-grow: 1;
+      justify-content: space-between;
+      align-items: start;
+      min-height: 0;
+      gap: 0;
+      .list-left {
+        width: fit-content;
+        min-height: 0;
+        flex-shrink: 0;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        border-right: 1px solid v.$px3;
+        height: 100%;
+        .card {
+          .text {
+            .text-name {
+              font-weight: 500;
+            }
+          }
+        }
+      }
+      .list-right {
+        min-height: 0;
+        flex-grow: 1;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        height: 100%;
+        .card {
+          display: block;
+          position: relative;
+          max-width: 100%;
+          .ic {
+            max-width: 100%;
+            overflow-x: auto;
+            scrollbar-width: thin;
+            opacity: 0.4;
+            canvas {
+              display: block;
+              margin: 0 auto;
+            }
+          }
+          .text {
+            z-index: 2;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            .text-name,
+            .text-sub {
+              text-shadow: v.$textoutline;
+              text-align: center;
+              color: v.$white;
+            }
+            .text-name {
+              font-weight: 500;
+            }
+          }
+          &.card-cutscene {
+            padding: v.$mediumPadding;
+            border-bottom: 1px solid v.$px2;
+            .text {
+              position: static;
+              transform: none;
+              .text-name {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                text-align: center;
+                font-weight: 400;
+                text-shadow: none;
+                color: v.$softwhite;
+              }
+            }
+          }
+          &.hide {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}

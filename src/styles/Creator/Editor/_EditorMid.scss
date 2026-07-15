@@ -1,0 +1,368 @@
+@use "../../variables" as v;
+
+$leftbox: clamp(200px, 30vw, 220px);
+
+.Editor .EditorMid {
+  flex-grow: 1;
+  min-height: 0;
+  background-color: v.$px1;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0;
+  .left {
+    height: 100%;
+    flex-shrink: 0;
+    width: $leftbox;
+    background-color: v.$px25;
+    border-right: 1px solid v.$px3;
+    .box {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: start;
+      align-items: center;
+      overflow: hidden;
+      .box-project {
+        flex-shrink: 0;
+        width: 100%;
+        text-align: center;
+        padding: v.$smallPadding;
+        word-break: break-all;
+        word-break: break-word;
+      }
+      .box-menu {
+        flex-shrink: 0;
+        width: 100%;
+        display: flex;
+        justify-content: left;
+        align-items: center;
+        gap: 0;
+        .btn {
+          width: calc(100% / 2);
+          text-align: center;
+          padding: v.$smallPadding;
+          background-color: v.$px2;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          &.active {
+            background-color: v.$pm1;
+            color: v.$px1;
+          }
+        }
+      }
+      .box-content {
+        width: 100%;
+        flex-grow: 1;
+        min-height: 0;
+      }
+    }
+  }
+  .right {
+    height: 100%;
+    flex-shrink: 0;
+    width: $leftbox;
+    background-color: v.$px25;
+    border-left: 1px solid v.$px3;
+    .box {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: start;
+      align-items: center;
+      overflow: hidden;
+      .box-conf {
+        width: 100%;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: center;
+        overflow: hidden;
+        .box-title {
+          flex-shrink: 0;
+          width: 100%;
+          text-align: center;
+          background-color: v.$px2;
+          border-bottom: 1px solid v.$px3;
+          padding: v.$smallPadding;
+          word-break: break-all;
+          word-break: break-word;
+        }
+        .box-content {
+          flex-grow: 1;
+          width: 100%;
+          min-height: 0;
+          overflow-y: auto;
+          overflow-x: hidden;
+          scrollbar-width: thin;
+          padding: v.$smallPadding;
+          .card-empty {
+            color: v.$syellow;
+            font-style: italic;
+            text-align: center;
+            padding: v.$smallPadding;
+            word-break: break-all;
+            word-break: break-word;
+            font-family: monospace, monospace;
+          }
+          .btn {
+            width: 100%;
+            padding: v.$smallPadding;
+            display: flex;
+            justify-content: left;
+            align-items: center;
+            gap: v.$smallPadding;
+            background-color: v.$px2;
+            margin-bottom: v.$smallPadding;
+            border-radius: v.$mediumPadding;
+            &:last-child {
+              margin-bottom: 0;
+            }
+            &.btn-rename,
+            &.btn-sources,
+            &.btn-safezone,
+            &.btn-settings {
+              i {
+                color: v.$sgreen;
+              }
+              &:hover {
+                background-color: rgba(v.$sgreen, 0.2);
+              }
+            }
+            &.btn-scene,
+            &.btn-objects,
+            &.btn-cutscenes,
+            &.btn-items,
+            &.btn-ambience,
+            &.btn-footstep {
+              i {
+                color: v.$syellow;
+              }
+              &:hover {
+                background-color: rgba(v.$syellow, 0.2);
+              }
+            }
+
+            &.btn-delete {
+              i {
+                color: v.$cred;
+              }
+              &:hover {
+                background-color: rgba(v.$sred, 0.2);
+              }
+            }
+          }
+          .check {
+            margin-bottom: v.$smallPadding;
+            padding: 0;
+            border-radius: v.$mediumPadding;
+            overflow: hidden;
+            label {
+              width: 100%;
+              padding: v.$smallPadding;
+              display: flex;
+              justify-content: left;
+              align-items: center;
+              gap: v.$smallPadding;
+              i {
+                color: v.$pm1;
+              }
+              &:hover {
+                background-color: rgba(v.$pm1, 0.2);
+              }
+            }
+          }
+        }
+        &.conf-map {
+          flex-grow: 1;
+        }
+        &.conf-world {
+          flex-shrink: 0;
+          border-top: 1px solid v.$px3;
+        }
+      }
+    }
+  }
+  .mid {
+    position: relative;
+    height: 100%;
+    flex-grow: 1;
+    overflow: hidden;
+    .map-canvas,
+    .grid-canvas,
+    .overlay-canvas,
+    .target-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      image-rendering: pixelated;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: crisp-edges;
+    }
+  }
+}
+
+.content-files {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  .file-group {
+    flex-shrink: 0;
+    width: 100%;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    gap: 3px;
+    padding: v.$smallPadding;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    border-bottom: 1px solid v.$px3;
+    .btn-group {
+      flex-shrink: 0;
+      white-space: nowrap;
+      padding: 2px 3px;
+      border: 1px solid v.$px3;
+      border-radius: 6px;
+      &.active {
+        background-color: v.$pm2;
+        border-color: v.$pm1;
+      }
+    }
+  }
+  .file-find {
+    flex-shrink: 0;
+    width: 100%;
+    padding: v.$smallPadding;
+    input {
+      width: 100%;
+      padding: v.$smallPadding;
+      border: 1px solid v.$px2;
+      background-color: v.$black;
+    }
+  }
+  .file-list {
+    flex-grow: 1;
+    width: 100%;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    .card {
+      padding: v.$smallPadding;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: pointer;
+      font-family: monospace, monospace;
+      span {
+        margin-left: 3px;
+      }
+      &:hover {
+        background-color: v.$px2;
+      }
+      &.hide {
+        display: none;
+      }
+    }
+    .card-empty {
+      color: v.$syellow;
+      font-style: italic;
+      text-align: center;
+      padding: 2px;
+      font-family: monospace, monospace;
+    }
+  }
+  .file-new {
+    width: 100%;
+    border-top: 1px solid v.$px3;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0;
+    .btn {
+      flex-grow: 1;
+      padding: v.$mediumPadding v.$smallPadding;
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      &.btn-new-file {
+        color: v.$yellow;
+        &:hover {
+          background-color: rgba(v.$syellow, 0.2);
+        }
+      }
+      &.btn-cancel:hover {
+        background-color: rgba(v.$pm2, 0.5);
+      }
+    }
+  }
+}
+
+.content-maps {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  min-height: 0;
+  .btn-new-map {
+    position: sticky;
+    top: 0;
+    left: 0;
+    text-align: center;
+    padding: v.$smallPadding;
+    color: v.$cgreen;
+    border-bottom: 1px solid v.$px3;
+  }
+  .card-empty {
+    color: v.$syellow;
+    font-style: italic;
+    text-align: center;
+    padding: v.$smallPadding;
+    word-break: break-all;
+    word-break: break-word;
+    font-family: monospace, monospace;
+  }
+  .card {
+    text-align: left;
+    padding: v.$smallPadding;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+    overflow: hidden;
+    .card-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .card-show {
+      display: none;
+      background-color: v.$px2;
+      color: v.$syellow;
+    }
+    &:hover {
+      background-color: v.$px2;
+      .card-show {
+        display: block;
+      }
+    }
+    &.active {
+      background-color: v.$pm1;
+      color: v.$px1;
+      .card-show {
+        display: none;
+      }
+    }
+  }
+}

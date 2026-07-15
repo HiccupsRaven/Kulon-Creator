@@ -1,0 +1,427 @@
+@use "./variables" as v;
+@use "./other/animations";
+
+$white: #dedede;
+$defaultSize: clamp(1rem, 10vw, 1.2rem);
+$bigPadding: clamp(10px, 5vw, 20px);
+$smallPadding: clamp(4px, 1vw, 8px);
+$mediumPadding: clamp(5px, 1.2vw, 10px);
+$largeMargin: clamp(60px, 5vw, 80px);
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 18px;
+  scroll-behavior: smooth;
+  scrollbar-color: v.$pm1 rgba(v.$px1, 0.5);
+  scrollbar-width: thin;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  font-family: v.$gamefont;
+}
+
+body {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  overflow-y: auto;
+  background-color: v.$px1;
+  color: v.$softwhite;
+  font-size: $defaultSize;
+}
+
+a,
+a:visited {
+  color: v.$pm1;
+}
+
+button,
+.btn {
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+img {
+  pointer-events: none;
+  display: block;
+  max-width: 100%;
+}
+
+.app {
+  width: 100%;
+  overflow: visible;
+}
+
+.nav {
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: v.$px1;
+  border-bottom: 1px solid v.$px3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: $mediumPadding;
+  padding: $mediumPadding;
+  .nav-left {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: $bigPadding;
+    .nav-title {
+      display: flex;
+      justify-content: start;
+      align-items: center;
+      .btn-menu {
+        display: none;
+        font-size: calc($defaultSize * 0.9);
+        padding: $mediumPadding;
+        color: $white;
+        &:hover {
+          background-color: v.$pm2;
+        }
+      }
+      .btn-icon {
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        gap: $mediumPadding;
+        margin-right: $mediumPadding;
+        span {
+          font-weight: 900;
+          color: $white;
+          font-size: calc($defaultSize * 1.1);
+        }
+      }
+    }
+    .nav-items {
+      display: flex;
+      justify-content: start;
+      align-items: center;
+      gap: $bigPadding;
+      .btn-nav {
+        text-decoration: none;
+        color: $white;
+        font-size: calc($defaultSize * 0.9);
+        &:hover {
+          color: v.$pm1;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+  .nav-right {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: $mediumPadding;
+    .btn-nav {
+      text-decoration: none;
+      font-size: calc($defaultSize * 0.8);
+      background-color: v.$pm1;
+      color: v.$black;
+      padding: $smallPadding $mediumPadding;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+  }
+}
+
+.main {
+  width: 100%;
+}
+
+.home {
+  background-image: url("../../public/images/the-island-preview.png");
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  position: relative;
+  width: 100%;
+  .home-content {
+    background: linear-gradient(120deg, rgba(v.$px1, 0.7), rgba(v.$px2, 0.95), rgba(v.$px1, 0.95));
+    width: 100%;
+    height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: $bigPadding;
+    .hero {
+      flex-grow: 1;
+      width: 100%;
+      padding: $bigPadding;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: $bigPadding;
+      .hero-title {
+        font-weight: 900;
+        font-size: calc($defaultSize * 2.2);
+        color: $white;
+        text-align: center;
+      }
+      .hero-desc {
+        text-align: center;
+        color: $white;
+      }
+      .hero-action {
+        .btn-start {
+          text-decoration: none;
+          display: block;
+          padding: $mediumPadding $bigPadding;
+          color: v.$black;
+          background-color: $white;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 2px;
+        }
+      }
+    }
+    .home-continue {
+      flex-shrink: 0;
+      width: 100%;
+      padding: $mediumPadding;
+      .btn-continue {
+        display: block;
+        width: fit-content;
+        margin: 0 auto;
+        padding: $mediumPadding;
+        &:hover {
+          background-color: v.$pm2;
+        }
+      }
+    }
+  }
+}
+
+.creator {
+  width: 100%;
+  padding: $largeMargin $bigPadding;
+  background-color: v.$px2;
+  .creator-title {
+    text-align: center;
+    font-size: calc($defaultSize * 1.6);
+    line-height: 1.25;
+    margin-bottom: $bigPadding;
+  }
+  .creator-desc {
+    text-align: center;
+    line-height: 1.2;
+    margin-bottom: $bigPadding;
+  }
+  .creator-assets {
+    img {
+      width: calc(100% - 10px);
+      max-width: 1000px;
+      margin: 0 auto;
+      outline-width: 1px;
+      outline-offset: 5px;
+      outline-style: solid;
+      outline-color: v.$pm1;
+    }
+  }
+  .creator-tech {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: $bigPadding;
+    .tech {
+      padding: $bigPadding;
+      display: block;
+      color: v.$softwhite;
+      p {
+        text-align: center;
+        line-height: 1.5;
+      }
+      &.tech-ts {
+        .icon {
+          color: #358ef1;
+        }
+      }
+      &.tech-js {
+        .icon {
+          color: #f0db4f;
+        }
+      }
+      &.tech-scss {
+        .icon {
+          color: #cd6799;
+        }
+      }
+      &.tech-css {
+        .icon {
+          color: #3c99dc;
+        }
+      }
+      &:hover {
+        color: v.$pm1;
+        .icon {
+          color: v.$pm1;
+        }
+      }
+    }
+  }
+  .creator-contributes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: start;
+    gap: v.$bigPadding;
+    .card {
+      border-top: 1px solid v.$softwhite;
+      padding: v.$bigPadding;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: $bigPadding;
+      .card-icon {
+        text-align: center;
+        color: v.$pm1;
+      }
+      .card-title {
+        text-align: center;
+        font-weight: 900;
+        font-size: calc($defaultSize * 1.4);
+      }
+      .card-desc {
+        text-align: center;
+        max-width: 320px;
+        line-height: 1.2;
+      }
+      .card-action {
+        text-align: center;
+        .btn-contribute {
+          display: block;
+          text-decoration: none;
+          background-color: v.$pm2;
+          padding: $mediumPadding $bigPadding;
+        }
+      }
+    }
+  }
+  .creator-sponsors {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: $bigPadding;
+    margin-bottom: $bigPadding;
+    .card {
+      padding: $mediumPadding $bigPadding;
+      background-color: v.$softwhite;
+      color: v.$black;
+      font-size: calc($defaultSize * 1.2);
+    }
+  }
+  .creator-action {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: $bigPadding;
+    .btn {
+      padding: $mediumPadding $bigPadding;
+      background-color: v.$pm2;
+      color: v.$pm1;
+      text-decoration: none;
+    }
+  }
+}
+
+.footer {
+  width: 100%;
+  padding: $bigPadding;
+  p {
+    text-align: center;
+    line-height: 1.2;
+    a {
+      text-decoration: none;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .nav {
+    padding: 0;
+    .nav-left {
+      min-width: 0;
+      flex-direction: column;
+      justify-content: center;
+      align-items: start;
+      gap: 0;
+      .nav-title {
+        padding: $mediumPadding;
+        .btn-icon {
+          span::before {
+            content: "KULON ";
+          }
+        }
+        .btn-menu {
+          display: block;
+        }
+      }
+      .nav-items {
+        display: none;
+        width: 100%;
+        border-top: 1px solid v.$px3;
+        flex-direction: column;
+        justify-content: center;
+        align-items: start;
+        gap: $mediumPadding;
+        padding: $bigPadding;
+        background-color: v.$px2;
+        .btn-nav {
+          width: 100%;
+          padding: $mediumPadding;
+          &:hover {
+            text-decoration: none;
+            color: $white;
+            background-color: v.$pm2;
+          }
+        }
+      }
+    }
+    .nav-right {
+      padding: $mediumPadding;
+    }
+    &.opened {
+      height: 100%;
+      flex-direction: column;
+      justify-content: start;
+      gap: 0;
+      background-color: v.$px2;
+      border-bottom: none;
+      .nav-left {
+        width: 100%;
+        .nav-title {
+          width: 100%;
+          background-color: v.$px1;
+        }
+        .nav-items {
+          animation: slide_right_in 0.25s;
+          display: flex;
+        }
+      }
+      .nav-right {
+        padding: $bigPadding;
+        background-color: v.$px2;
+        width: 100%;
+        animation: slide_right_in 0.25s;
+      }
+    }
+  }
+}

@@ -1,0 +1,133 @@
+@use "../../variables" as v;
+
+.game-settings {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 95;
+  background-color: rgba(v.$black, 0.6);
+  padding: v.$bigPadding;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .setting-box {
+    width: clamp(300px, 90vw, 900px);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    border: 1px solid v.$px3;
+    animation: slide_form_in 0.2s;
+    .setting-title {
+      flex-shrink: 0;
+      width: 100%;
+      padding: v.$mediumPadding;
+      font-size: 1.2em;
+      font-weight: 600;
+      text-align: center;
+      border-bottom: 1px solid v.$px3;
+      background-color: v.$px2;
+    }
+    .setting-content {
+      flex-grow: 1;
+      width: 100%;
+      min-height: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 0;
+      .setting-nav {
+        flex-shrink: 0;
+        height: 100%;
+        border-right: 1px solid v.$px3;
+        background-color: v.$px1;
+        .card {
+          min-width: 120px;
+          padding: v.$mediumPadding v.$bigPadding;
+          &.active {
+            background-color: v.$pm1;
+            color: v.$px1;
+          }
+        }
+      }
+      .setting-form {
+        flex-grow: 1;
+        height: 100%;
+        background-color: v.$px1;
+        .iform {
+          background-color: v.$px1;
+          position: relative;
+          padding: 0;
+          .box {
+            width: 100%;
+            height: 100%;
+            max-height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            border: none;
+            animation: none;
+            .group-setting-field {
+              width: 100%;
+              flex-grow: 1;
+              min-height: 0;
+              overflow-y: auto;
+              scrollbar-width: thin;
+              .f {
+                &.f-scripts {
+                  .mono {
+                    padding: 2px 5px;
+                    border-radius: 5px;
+                    background-color: v.$px1;
+                    color: v.$syellow;
+                    font-size: v.$defaultSize;
+                    border: 1px solid v.$px3;
+                  }
+                }
+              }
+              .group-player-spawn.hide {
+                display: none;
+              }
+            }
+            .group-setting-actions {
+              padding: 0;
+              flex-shrink: 0;
+              width: 100%;
+              .f {
+                padding: v.$mediumPadding;
+                border-top: 1px solid v.$px3;
+                display: flex;
+                justify-content: right;
+                align-items: center;
+                gap: v.$mediumPadding;
+                .s {
+                  .btn {
+                    padding: v.$mediumPadding v.$bigPadding;
+                    font-size: v.$defaultSize;
+                    font-weight: 600;
+                    display: block;
+                    width: fit-content;
+                    background-color: v.$px2;
+                    border-radius: 5px;
+                    color: v.$white;
+                    &.btn-ok {
+                      background-color: v.$pm2;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  &.hide {
+    display: none;
+  }
+}

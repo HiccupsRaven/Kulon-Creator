@@ -1,0 +1,89 @@
+[
+  {
+    "id": "placeholder",
+    "map": "placeholder",
+    "name": "Name: Placeholder",
+    "desc": {
+      "id": "Placeholder",
+      "en": "Placeholder"
+    },
+    "memory": [
+      {
+        "ts": 0,
+        "text": {
+          "id": "Placeholder",
+          "en": "Placeholder"
+        }
+      }
+    ],
+    "mode": 1,
+    "group": 1,
+    "min": 1,
+    "max": 4,
+    "ready": 1,
+    "price": [
+      "CL00003",
+      1
+    ],
+    "spawn": {
+      "area": "kulonFirstRoad",
+      "x": 75,
+      "y": 55,
+      "direction": "down",
+      "inc": "y"
+    },
+    "bag": [
+      {
+        "id": "J00003",
+        "amount": 1
+      }
+    ],
+    "clue": [
+      {
+        "id": "clue_initial_1",
+        "text": {
+          "en": "Charge the car battery",
+          "id": "Isi daya aki mobil"
+        },
+        "idx": 13,
+        "states": [
+          "CAR_BATERY_B"
+        ]
+      },
+      {
+        "id": "clue_initial_2",
+        "text": {
+          "en": "[Optional] Find a way to charge the car battery",
+          "id": "[Opsional] Cari cara untuk mengisi daya aki mobil"
+        },
+        "idx": 11,
+        "states": [
+          "VAN_NOTE"
+        ],
+        "instant": true
+      }
+    ],
+    "payout": {
+      "fail": [
+        {
+          "id": "69",
+          "amount": 0
+        },
+        {
+          "id": "420",
+          "amount": 0
+        }
+      ],
+      "success": [
+        {
+          "id": "69",
+          "amount": 20
+        },
+        {
+          "id": "420",
+          "amount": 80
+        }
+      ]
+    }
+  }
+]

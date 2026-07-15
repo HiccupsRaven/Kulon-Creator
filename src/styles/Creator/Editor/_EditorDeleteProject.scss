@@ -1,0 +1,128 @@
+@use "../../variables" as v;
+
+.EditorDeleteProject {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 95;
+  background-color: rgba(v.$black, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: v.$bigPadding;
+  font-size: 1.2em;
+  .box {
+    position: relative;
+    width: clamp(300px, 80vw, 800px);
+    height: calc(100% - v.$bigPadding);
+    background-color: v.$px1;
+    border: 1px solid v.$px3;
+    animation: slide_form_in 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .box-top {
+      width: 100%;
+      flex-shrink: 0;
+      padding: v.$mediumPadding;
+      font-weight: 600;
+      text-align: center;
+      border-bottom: 1px solid v.$px3;
+      background-color: v.$px2;
+    }
+    .box-bottom {
+      width: 100%;
+      flex-shrink: 0;
+      border-top: 1px solid v.$px3;
+      background-color: v.$px25;
+      padding: v.$mediumPadding;
+      .inp-text {
+        width: 100%;
+        label,
+        input {
+          display: block;
+        }
+        label {
+          line-height: 1.5;
+          margin-bottom: v.$smallPadding;
+        }
+        input {
+          letter-spacing: 1px;
+          width: 100%;
+          background-color: v.$px1;
+          color: v.$softwhite;
+          border: 1px solid v.$px2;
+          padding: v.$mediumPadding;
+          font-size: 1em;
+          &::placeholder {
+            font-style: italic;
+            color: rgba(v.$cred, 0.4);
+          }
+          &:focus {
+            border-color: v.$pm1;
+          }
+        }
+      }
+      .inp-action {
+        margin-top: v.$mediumPadding;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        gap: v.$mediumPadding;
+        .btn {
+          width: calc((100% / 2) - v.$mediumPadding);
+          padding: v.$mediumPadding;
+          text-align: center;
+          font-weight: bold;
+          font-size: 1em;
+          &.btn-project-cancel {
+            background-color: v.$black;
+          }
+          &.btn-project-delete {
+            background-color: v.$sred;
+            color: v.$white;
+            &.disabled {
+              color: v.$softwhite;
+              background-color: v.$sgray;
+              opacity: 0.4;
+            }
+          }
+        }
+      }
+    }
+    .box-mid {
+      min-height: 0;
+      flex-grow: 1;
+      width: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: thin;
+      padding: v.$mediumPadding;
+      .f {
+        margin-bottom: v.$mediumPadding;
+        ul {
+          list-style-position: outside;
+          &.work-list {
+            background-color: rgba(v.$black, 0.1);
+            padding: v.$mediumPadding;
+            border: 1px solid v.$px3;
+            li {
+              margin-left: 1.65em;
+              line-height: 1.5;
+              font-family: monospace, monospace;
+              color: v.$cred;
+              font-size: v.$defaultSize;
+              word-break: break-all;
+              word-break: break-word;
+            }
+          }
+        }
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
