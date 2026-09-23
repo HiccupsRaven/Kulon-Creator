@@ -1,9 +1,7 @@
 name: Deploy to GitHub Pages
 
 on:
-  push:
-    branches:
-      - fuhhh
+  workflow_dispatch:
 
 permissions:
   contents: read

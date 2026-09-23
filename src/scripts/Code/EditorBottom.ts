@@ -70,7 +70,7 @@ export class EditorBottom {
 
     btnCompile.onclick = async () => {
       if (this.editor.locked) return
-      if ((db.modLanguage.lastCompiled || 0) >= (db.modLanguage.lastSaved || 0)) return
+      if ((db.modLanguage.lastCompiled || 0) >= (db.modLanguage.lastSaved || 1)) return
       if (this.editor.middle.textEditor?.isSwitchLocked) return
       this.lock()
 
