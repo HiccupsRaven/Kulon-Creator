@@ -1,4 +1,4 @@
-import "webfont-awesome-pro/scss/allstyles.scss"
+import "webfont-awesome-pro/css/full.css"
 import "../styles/creator.scss"
 import { Dashboard } from "./Creator/Dashboard"
 import { vfs } from "./lib/VirtualFileSystem"

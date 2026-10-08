@@ -1,6 +1,6 @@
-import "webfont-awesome-pro/scss/fontawesome.scss"
-import "webfont-awesome-pro/scss/brands.scss"
-import "webfont-awesome-pro/scss/pixel-regular.scss"
+import "webfont-awesome-pro/css/fontawesome.css"
+import "webfont-awesome-pro/css/brands.css"
+import "webfont-awesome-pro/css/pixel-regular.css"
 import "../styles/home.scss"
 
 const paralax = document.querySelector(".para") as HTMLDivElement

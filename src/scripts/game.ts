@@ -1,4 +1,4 @@
-import "webfont-awesome-pro/scss/allstyles.scss"
+import "webfont-awesome-pro/css/full.css"
 import "../styles/game.scss"
 import Auth from "./pages/Auth"
 import localSave from "./manager/storage"

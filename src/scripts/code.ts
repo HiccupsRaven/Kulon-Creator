@@ -1,4 +1,4 @@
-import "webfont-awesome-pro/scss/allstyles.scss"
+import "webfont-awesome-pro/css/full.css"
 import "../styles/code.scss"
 import { vfs } from "./lib/VirtualFileSystem"
 import { Editor } from "./Code/Editor"
